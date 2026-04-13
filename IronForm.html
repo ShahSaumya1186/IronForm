@@ -1,0 +1,2787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRONFORM — Weight Training Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ===== DESIGN TOKENS ===== */
+  :root {
+    --bg: #080808;
+    --surface: #111;
+    --surface2: #181818;
+    --surface3: #1f1f1f;
+    --accent: #e8ff00;
+    --accent2: #ff3c00;
+    --accent-dim: rgba(232,255,0,0.08);
+    --text: #f0f0f0;
+    --text2: #bbb;
+    --muted: #555;
+    --border: #1e1e1e;
+    --border2: #2a2a2a;
+    --radius: 8px;
+    --radius-sm: 4px;
+    --header-h: 60px;
+    --mobile-nav-h: 64px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --shadow-accent: 0 0 30px rgba(232,255,0,0.15);
+  }
+
+  /* ===== RESET ===== */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  button { cursor: pointer; }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  /* ===== KEYFRAMES ===== */
+  @keyframes fadeUp   { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
+  @keyframes slideUp  { from { transform:translateY(100%); opacity:0; } to { transform:translateY(0); opacity:1; } }
+  @keyframes pulse    { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+  @keyframes spin     { to { transform:rotate(360deg); } }
+  @keyframes spin-full { to { transform: rotate(360deg); } }
+  @keyframes toastIn  { from { opacity:0; transform:translateY(20px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+  @keyframes toastOut { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(10px); } }
+  @keyframes shimmer  { from { background-position:-200% 0; } to { background-position:200% 0; } }
+
+  /* ===== HEADER ===== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    height: var(--header-h);
+    background: rgba(8,8,8,0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 1.25rem;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.7rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-shadow: var(--shadow-accent);
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .logo span { color: var(--accent2); }
+
+  /* Desktop nav (hidden on mobile) */
+  #desktop-nav {
+    display: flex;
+    gap: 2px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .nav-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    transition: all 0.18s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--text); border-color: var(--border2); }
+  .nav-btn.active { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+
+  /* Auth area */
+  #auth-area { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; margin-left: auto; }
+  #auth-guest { display: flex; gap: 0.4rem; }
+  #auth-user  { display: none; align-items: center; gap: 0.6rem; }
+  #auth-username {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 1px;
+    color: var(--accent);
+    white-space: nowrap;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    border: none;
+    color: #000;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    transition: opacity 0.18s, transform 0.18s;
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-outline {
+    background: none;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    transition: all 0.18s;
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ===== MOBILE BOTTOM NAV ===== */
+  #mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--mobile-nav-h);
+    background: rgba(8,8,8,0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    z-index: 200;
+    padding: 0 0.5rem;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  #mobile-nav-inner {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    height: 100%;
+    align-items: center;
+  }
+  .mob-nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 8px 4px;
+    border-radius: var(--radius);
+    transition: color 0.18s, background 0.18s;
+    min-height: 48px;
+  }
+  .mob-nav-btn .icon { font-size: 1.4rem; line-height: 1; }
+  .mob-nav-btn.active { color: var(--accent); background: rgba(232,255,0,0.06); }
+
+  /* Body padding for mobile nav */
+  body.has-mobile-nav { padding-bottom: var(--mobile-nav-h); }
+
+  /* ===== TOAST NOTIFICATIONS ===== */
+  #toast-container {
+    position: fixed;
+    bottom: calc(var(--mobile-nav-h) + 12px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    pointer-events: none;
+    width: 100%;
+    max-width: 360px;
+    padding: 0 1rem;
+  }
+  .toast {
+    background: var(--surface3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-size: 0.88rem;
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    animation: toastIn 0.25s ease forwards;
+    max-width: 100%;
+    text-align: center;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toast.success { border-color: rgba(102,187,106,0.5); }
+  .toast.error   { border-color: rgba(255,60,0,0.4); }
+  .toast.out     { animation: toastOut 0.2s ease forwards; }
+
+  /* ===== SCROLL-TO-TOP ===== */
+  #scroll-top {
+    position: fixed;
+    bottom: calc(var(--mobile-nav-h) + 16px);
+    right: 1rem;
+    width: 40px; height: 40px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    z-index: 190;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.25s, transform 0.25s;
+    pointer-events: none;
+  }
+  #scroll-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+  /* ===== HERO ===== */
+  .hero {
+    padding: clamp(2.5rem, 8vw, 5rem) 1.25rem clamp(2rem, 5vw, 3rem);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: 'IRONFORM';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 22vw, 18rem);
+    color: rgba(232,255,0,0.025);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    border: 1px solid rgba(255,60,0,0.4);
+    padding: 5px 14px;
+    border-radius: 99px;
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.8rem, 9vw, 7rem);
+    line-height: 0.88;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero h1 em { color: var(--accent); font-style: normal; display: block; }
+  .hero p {
+    max-width: 520px;
+    margin: 1.25rem auto 0;
+    color: var(--muted);
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== MUSCLE TABS - horizontal scroll on mobile ===== */
+  .muscle-tabs-wrap {
+    padding: 1.5rem 0 0;
+    position: relative;
+  }
+  .muscle-tabs-wrap::before,
+  .muscle-tabs-wrap::after {
+    content: '';
+    position: absolute;
+    top: 1.5rem;
+    bottom: 0;
+    width: 24px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .muscle-tabs-wrap::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
+  .muscle-tabs-wrap::after  { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
+
+  .muscle-tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0 1.25rem 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+  .muscle-tabs::-webkit-scrollbar { display: none; }
+
+  .muscle-tab {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+    position: relative;
+    min-height: 44px;
+  }
+  .muscle-tab:hover { color: var(--text); border-color: var(--border2); background: var(--surface2); }
+  .muscle-tab.active { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+  .muscle-tab .emoji { margin-right: 6px; }
+
+  /* ===== SECTIONS ===== */
+  .section {
+    display: none;
+    padding: clamp(1rem, 3vw, 2rem);
+    max-width: 1400px;
+    margin: 0 auto;
+    animation: fadeUp 0.35s ease;
+  }
+  .section.active { display: block; }
+
+  /* ===== MUSCLE BANNER ===== */
+  .muscle-banner {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--accent);
+    padding: clamp(1rem, 3vw, 1.5rem) clamp(1rem, 3vw, 1.75rem);
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius);
+  }
+  .muscle-banner h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    letter-spacing: 2px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .muscle-banner p {
+    color: var(--muted);
+    font-size: clamp(0.82rem, 2vw, 0.9rem);
+    line-height: 1.65;
+    max-width: 560px;
+  }
+  .sub-muscles { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.75rem; }
+  .sub-muscle-tag {
+    background: rgba(232,255,0,0.07);
+    border: 1px solid rgba(232,255,0,0.2);
+    color: rgba(232,255,0,0.8);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
+
+  /* ===== EXERCISE GRID ===== */
+  .exercise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 1rem;
+  }
+
+  /* ===== EXERCISE CARD ===== */
+  .exercise-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  @media (hover: hover) {
+    .exercise-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,255,0,0.1);
+    }
+  }
+  .exercise-card:active { transform: scale(0.99); }
+
+  .video-thumb {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    background: #000;
+    overflow: hidden;
+  }
+  .video-thumb img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .exercise-card:hover .video-thumb img { transform: scale(1.04); }
+
+  .play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.35);
+    transition: background 0.2s;
+    z-index: 2;
+  }
+  .play-overlay:hover { background: rgba(0,0,0,0.15); }
+  .play-icon {
+    width: 52px; height: 52px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(232,255,0,0.3);
+  }
+  .play-overlay:hover .play-icon { transform: scale(1.1); }
+  .play-icon svg { fill: #000; margin-left: 3px; }
+
+  .card-body { padding: clamp(0.9rem, 2.5vw, 1.25rem); }
+  .card-number { font-family: 'Bebas Neue',sans-serif; font-size:0.8rem; letter-spacing:2px; color:var(--accent2); margin-bottom:0.2rem; }
+  .card-title  { font-family: 'Barlow Condensed',sans-serif; font-size:clamp(1.1rem,3vw,1.3rem); font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.4rem; color:var(--text); }
+  .card-desc   { font-size:0.83rem; color:var(--muted); line-height:1.6; margin-bottom:0.9rem; }
+  .card-tags   { display:flex; gap:0.4rem; flex-wrap:wrap; }
+  .tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 99px;
+  }
+  .tag-primary   { background: rgba(232,255,0,0.1); color: var(--accent); border: 1px solid rgba(232,255,0,0.25); }
+  .tag-secondary { background: rgba(255,60,0,0.1); color: var(--accent2); border: 1px solid rgba(255,60,0,0.25); }
+  .card-muscles { margin-top:0.7rem; padding-top:0.7rem; border-top:1px solid var(--border); font-size:0.78rem; color:var(--muted); }
+  .card-muscles strong { color: var(--text2); font-weight:500; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 500;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+  }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-top: 2px solid var(--accent);
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    border-radius: var(--radius) var(--radius) 0 0;
+    position: relative;
+    animation: slideUp 0.3s cubic-bezier(0.34,1.3,0.64,1);
+  }
+  @media (min-width: 640px) {
+    .modal-overlay { align-items: center; padding: 1.5rem; }
+    .modal { max-width: 780px; border-radius: var(--radius); max-height: 88vh; animation: fadeUp 0.25s ease; }
+  }
+
+  .modal-drag-handle {
+    width: 36px; height: 4px;
+    background: var(--border2);
+    border-radius: 99px;
+    margin: 12px auto 0;
+  }
+  @media (min-width: 640px) { .modal-drag-handle { display: none; } }
+
+  .modal-close {
+    position: absolute;
+    top: 0.9rem; right: 0.9rem;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: all 0.18s;
+    z-index: 2;
+  }
+  .modal-close:hover { border-color: var(--accent); color: var(--accent); }
+
+  .modal-video { width:100%; padding-bottom:56.25%; position:relative; background:#000; }
+  .modal-video iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+  .modal-content { padding: clamp(1rem, 4vw, 1.75rem); }
+  .modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    letter-spacing: 2px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.6rem;
+  }
+  .modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+  }
+  @media (max-width: 480px) { .modal-grid { grid-template-columns: 1fr; } }
+  .modal-section h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 0.6rem;
+  }
+  .modal-section ul { list-style:none; display:flex; flex-direction:column; gap:0.35rem; }
+  .modal-section ul li {
+    font-size: 0.88rem;
+    color: var(--text2);
+    padding-left: 1rem;
+    position: relative;
+    line-height: 1.5;
+  }
+  .modal-section ul li::before { content:'→'; position:absolute; left:0; color:var(--accent); }
+  .modal-tips {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--accent);
+    padding: 0.9rem 1.1rem;
+    margin-top: 1.25rem;
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  .modal-tips strong { color: var(--accent); }
+
+  /* ===== SHARED FORM INPUTS ===== */
+  .bmi-label {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.4rem;
+  }
+  .bmi-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    padding: 11px 13px;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    -moz-appearance: textfield;
+    min-height: 44px;
+  }
+  .bmi-input::-webkit-inner-spin-button, .bmi-input::-webkit-outer-spin-button { -webkit-appearance:none; }
+  .bmi-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232,255,0,0.08); }
+  .bmi-input::placeholder { color: var(--muted); }
+  .bmi-select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    padding: 11px 13px;
+    outline: none;
+    transition: border-color 0.18s;
+    min-height: 44px;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+  .bmi-select:focus { border-color: var(--accent); }
+  .sex-btn {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    transition: all 0.18s;
+    min-height: 44px;
+  }
+  .sex-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+  /* ===== STAT CARDS ===== */
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 1.1rem;
+    text-align: center;
+  }
+  .stat-label { font-family:'Barlow Condensed',sans-serif; font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:0.4rem; }
+  .stat-value { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; color:var(--accent); letter-spacing:1px; }
+
+  /* ===== BMI FIELD ===== */
+  .bmi-field { display: flex; flex-direction: column; }
+
+  /* ===== CALORIE TRACKER STYLES ===== */
+  @keyframes spin-cal { to { transform:translateY(-50%) rotate(360deg); } }
+  .food-log-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.87rem;
+    animation: fadeUp 0.25s ease;
+  }
+  .food-log-row:last-child { border-bottom: none; }
+  .food-log-name  { flex:1; color:var(--text); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .food-log-macros { color:var(--muted); font-size:0.74rem; font-family:'Barlow Condensed',sans-serif; letter-spacing:0.5px; flex-shrink:0; }
+  .food-log-cal   { font-family:'Bebas Neue',sans-serif; font-size:1.05rem; color:var(--accent); min-width:48px; text-align:right; flex-shrink:0; }
+  .food-log-del   { background:none; border:none; color:var(--muted); font-size:1rem; padding:4px 8px; border-radius:var(--radius-sm); transition:color 0.18s,background 0.18s; min-width:32px; min-height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .food-log-del:hover { color:var(--accent2); background:rgba(255,60,0,0.08); }
+  .meal-group-header { font-family:'Barlow Condensed',sans-serif; font-size:0.68rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:0.7rem 0 0.25rem; border-top:1px solid var(--border); margin-top:0.25rem; display:flex; justify-content:space-between; align-items:center; }
+  .meal-group-header:first-child { border-top:none; margin-top:0; padding-top:0; }
+  .history-day { padding:0.75rem; background:var(--surface2); border-radius:var(--radius); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.75rem; }
+  .history-day-date { font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; letter-spacing:1px; color:var(--text); min-width:110px; }
+  .history-day-bar  { flex:1; height:5px; background:var(--border2); border-radius:99px; overflow:hidden; }
+  .history-day-fill { height:100%; border-radius:99px; background:var(--accent); transition:width 0.5s; }
+  .history-day-cal  { font-family:'Bebas Neue',sans-serif; font-size:0.95rem; color:var(--accent); min-width:100px; text-align:right; white-space:nowrap; }
+
+  /* ===== PAGE SECTIONS ===== */
+  .page-section { max-width: 900px; margin: 0 auto; padding: clamp(1rem, 3vw, 2rem); }
+  .page-header { text-align:center; padding:clamp(2rem,6vw,4rem) 1rem clamp(1.5rem,4vw,2.5rem); }
+  .page-header h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(2.2rem,7vw,5rem); letter-spacing:2px; line-height:0.92; }
+  .page-header p { color:var(--muted); max-width:460px; margin:1rem auto 0; line-height:1.7; font-size:clamp(0.85rem,2.5vw,0.95rem); }
+
+  /* ===== CARD SURFACE ===== */
+  .card-surface {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: clamp(1rem,3vw,1.5rem);
+    margin-bottom: 1.25rem;
+  }
+  .card-surface-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 1rem;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    padding: clamp(2rem,5vw,3rem) 1.25rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.8;
+  }
+  footer strong { color: var(--accent); font-family:'Bebas Neue',sans-serif; letter-spacing:2px; font-weight:400; }
+
+  /* ===== RESPONSIVE BREAKPOINTS ===== */
+  @media (max-width: 767px) {
+    #desktop-nav { display: none; }
+    #mobile-nav  { display: block; }
+    body.has-mobile-nav { padding-bottom: var(--mobile-nav-h); }
+    .muscle-tabs { justify-content: flex-start; }
+    .exercise-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+    #toast-container { bottom: calc(var(--mobile-nav-h) + 8px); }
+    #scroll-top { bottom: calc(var(--mobile-nav-h) + 12px); }
+  }
+
+  @media (min-width: 768px) {
+    .exercise-grid { grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); }
+    .muscle-tabs { justify-content: center; flex-wrap: wrap; }
+    #scroll-top { bottom: 24px; }
+    #toast-container { bottom: 24px; }
+  }
+
+  @media (min-width: 1024px) {
+    .exercise-grid { grid-template-columns: repeat(auto-fill, minmax(340px,1fr)); gap: 1.25rem; }
+  }
+
+  /* ===== PASSWORD TOGGLE ===== */
+  .pw-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .pw-wrap .bmi-input {
+    padding-right: 44px;
+  }
+  .pw-toggle {
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    bottom: 1px;
+    width: 42px;
+    background: none;
+    border: none;
+    border-left: 1px solid var(--border2);
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    transition: color 0.18s, background 0.18s;
+    flex-shrink: 0;
+  }
+  .pw-toggle:hover {
+    color: var(--accent);
+    background: rgba(232,255,0,0.06);
+  }
+  .pw-toggle:active { background: rgba(232,255,0,0.12); }
+  .eye-icon {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+  }
+  .skeleton {
+    background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: var(--radius-sm);
+  }
+
+  /* ===== PRESCRIPTION STRIP (card) ===== */
+  .prescription-strip {
+    display: flex;
+    align-items: center;
+    margin-top: 0.85rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .presc-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.55rem 0.25rem;
+    gap: 2px;
+  }
+  .presc-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+  .presc-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.57rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .presc-divider {
+    width: 1px;
+    height: 26px;
+    background: var(--border2);
+    flex-shrink: 0;
+  }
+
+  /* ===== MODAL PRESCRIPTION BOX ===== */
+  .modal-presc-box {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(232,255,0,0.07), rgba(232,255,0,0.03));
+    border: 1px solid rgba(232,255,0,0.2);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 0.6rem;
+  }
+  .modal-presc-item {
+    flex: 1;
+    text-align: center;
+    padding: 1rem 0.5rem;
+  }
+  .modal-presc-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+  .modal-presc-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .modal-presc-sep {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: rgba(232,255,0,0.2);
+    padding: 0 0.1rem;
+    flex-shrink: 0;
+  }
+  .modal-presc-note {
+    font-size: 0.74rem;
+    color: var(--muted);
+    line-height: 1.5;
+    padding: 0 0.25rem 0.25rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">IRON<span>FORM</span></div>
+  <nav id="desktop-nav">
+    <button class="nav-btn active" id="nav-guide" onclick="showPage('guide')">🏋️ Training</button>
+    <button class="nav-btn" id="nav-bmi" onclick="showPage('bmi')">⚖️ BMI</button>
+    <button class="nav-btn" id="nav-calories" onclick="showPage('calories')">🔥 Calories</button>
+  </nav>
+  <div id="auth-area">
+    <div id="auth-guest" style="display:flex;gap:0.4rem;">
+      <button class="btn-outline nav-btn" onclick="openAuthModal('login')">Login</button>
+      <button class="btn-primary" onclick="openAuthModal('signup')">Sign Up</button>
+    </div>
+    <div id="auth-user" style="display:none;align-items:center;gap:0.6rem;">
+      <span id="auth-username"></span>
+      <button class="btn-outline nav-btn" onclick="logout()" style="font-size:0.72rem;padding:5px 10px;">Logout</button>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav id="mobile-nav" role="navigation" aria-label="Main navigation">
+  <div id="mobile-nav-inner">
+    <button class="mob-nav-btn active" id="mob-nav-guide" onclick="showPage('guide')">
+      <span class="icon">🏋️</span>Training
+    </button>
+    <button class="mob-nav-btn" id="mob-nav-bmi" onclick="showPage('bmi')">
+      <span class="icon">⚖️</span>BMI
+    </button>
+    <button class="mob-nav-btn" id="mob-nav-calories" onclick="showPage('calories')">
+      <span class="icon">🔥</span>Calories
+    </button>
+  </div>
+</nav>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container" role="status" aria-live="polite"></div>
+
+<!-- SCROLL TO TOP -->
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top">↑</button>
+
+<div id="page-guide">
+<div class="hero">
+  <div class="hero-tag">Weight Training Encyclopedia</div>
+  <h1>Master<em>Every Muscle.</em></h1>
+  <p>Your complete guide to weight training. Pick a muscle group, explore every exercise, watch the perfect form, and understand exactly what's firing.</p>
+</div>
+
+<!-- MUSCLE GROUP TABS -->
+<div class="muscle-tabs-wrap">
+<div class="muscle-tabs">
+  <button class="muscle-tab active" onclick="showSection('chest', this)"><span class="emoji">💪</span>Chest</button>
+  <button class="muscle-tab" onclick="showSection('shoulder', this)"><span class="emoji">🔥</span>Shoulders</button>
+  <button class="muscle-tab" onclick="showSection('back', this)"><span class="emoji">🦅</span>Back</button>
+  <button class="muscle-tab" onclick="showSection('legs', this)"><span class="emoji">🍗</span>Legs</button>
+  <button class="muscle-tab" onclick="showSection('bicep', this)"><span class="emoji">💪</span>Biceps</button>
+  <button class="muscle-tab" onclick="showSection('tricep', this)"><span class="emoji">⚡</span>Triceps</button>
+</div>
+</div>
+
+<!-- ===== CHEST ===== -->
+<div class="section active" id="section-chest">
+  <div class="muscle-banner">
+    <div>
+      <h2>Chest</h2>
+      <p>The pectorals are your primary pushing muscles. A well-developed chest requires hitting the muscle from multiple angles — upper, mid, and lower — while also focusing on the squeeze and stretch at different points in the range of motion.</p>
+      <div class="sub-muscles">
+        <span class="sub-muscle-tag">Pectoralis Major</span>
+        <span class="sub-muscle-tag">Pectoralis Minor</span>
+        <span class="sub-muscle-tag">Serratus Anterior</span>
+        <span class="sub-muscle-tag">Anterior Deltoid (secondary)</span>
+      </div>
+    </div>
+  </div>
+  <div class="exercise-grid" id="grid-chest"></div>
+</div>
+
+<!-- ===== SHOULDER ===== -->
+<div class="section" id="section-shoulder">
+  <div class="muscle-banner">
+    <div>
+      <h2>Shoulders</h2>
+      <p>The deltoids have three distinct heads — anterior, lateral, and posterior — each requiring different exercises to fully develop. Shoulder width, roundness, and rear delt thickness all depend on hitting every head consistently.</p>
+      <div class="sub-muscles">
+        <span class="sub-muscle-tag">Anterior Deltoid</span>
+        <span class="sub-muscle-tag">Lateral Deltoid</span>
+        <span class="sub-muscle-tag">Posterior Deltoid</span>
+        <span class="sub-muscle-tag">Rotator Cuff</span>
+      </div>
+    </div>
+  </div>
+  <div class="exercise-grid" id="grid-shoulder"></div>
+</div>
+
+<!-- ===== BACK ===== -->
+<div class="section" id="section-back">
+  <div class="muscle-banner">
+    <div>
+      <h2>Back</h2>
+      <p>The back is the most complex muscle group to train. Width comes from the lats, thickness from the traps and rhomboids, and lower back strength from the erector spinae. Pull from different angles to hit all regions.</p>
+      <div class="sub-muscles">
+        <span class="sub-muscle-tag">Latissimus Dorsi</span>
+        <span class="sub-muscle-tag">Trapezius</span>
+        <span class="sub-muscle-tag">Rhomboids</span>
+        <span class="sub-muscle-tag">Erector Spinae</span>
+        <span class="sub-muscle-tag">Teres Major</span>
+      </div>
+    </div>
+  </div>
+  <div class="exercise-grid" id="grid-back"></div>
+</div>
+
+<!-- ===== LEGS ===== -->
+<div class="section" id="section-legs">
+  <div class="muscle-banner">
+    <div>
+      <h2>Legs</h2>
+      <p>The legs are your foundation. Quads, hamstrings, glutes, and calves each need dedicated work. The hamstrings are often underdeveloped — include both knee-flexion and hip-extension movements for complete development.</p>
+      <div class="sub-muscles">
+        <span class="sub-muscle-tag">Quadriceps</span>
+        <span class="sub-muscle-tag">Hamstrings</span>
+        <span class="sub-muscle-tag">Glutes (Maximus / Medius / Minimus)</span>
+        <span class="sub-muscle-tag">Gastrocnemius</span>
+        <span class="sub-muscle-tag">Soleus</span>
+      </div>
+    </div>
+  </div>
+  <div class="exercise-grid" id="grid-legs"></div>
+</div>
+
+<!-- ===== BICEPS ===== -->
+<div class="section" id="section-bicep">
+  <div class="muscle-banner">
+    <div>
+      <h2>Biceps</h2>
+      <p>The biceps have a long head (outer peak) and short head (inner thickness). The brachialis underneath pushes the bicep up and makes your arm thicker from the side. Train with both supinated and neutral grips.</p>
+      <div class="sub-muscles">
+        <span class="sub-muscle-tag">Biceps Brachii (Long Head)</span>
+        <span class="sub-muscle-tag">Biceps Brachii (Short Head)</span>
+        <span class="sub-muscle-tag">Brachialis</span>
+        <span class="sub-muscle-tag">Brachioradialis</span>
+      </div>
+    </div>
+  </div>
+  <div class="exercise-grid" id="grid-bicep"></div>
+</div>
+
+<!-- ===== TRICEPS ===== -->
+<div class="section" id="section-tricep">
+  <div class="muscle-banner">
+    <div>
+      <h2>Triceps</h2>
+      <p>Triceps make up ~⅔ of your upper arm. They have three heads — lateral (outer), medial (mid), and long (inner/largest). The long head only fully stretches when your arm is overhead, so include overhead extensions in your routine.</p>
+      <div class="sub-muscles">
+        <span class="sub-muscle-tag">Lateral Head</span>
+        <span class="sub-muscle-tag">Medial Head</span>
+        <span class="sub-muscle-tag">Long Head</span>
+      </div>
+    </div>
+  </div>
+  <div class="exercise-grid" id="grid-tricep"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)" role="dialog" aria-modal="true">
+  <div class="modal" id="modal-inner">
+    <div class="modal-drag-handle"></div>
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+    <div class="modal-video">
+      <iframe id="modal-iframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="modal-content">
+      <div class="card-tags" id="modal-tags" style="margin-bottom:0.75rem;"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <p id="modal-desc" style="color:var(--muted);line-height:1.7;font-size:0.92rem;"></p>
+      <!-- PRESCRIPTION -->
+      <div id="modal-prescription" style="margin-top:1rem;"></div>
+      <div class="modal-grid">
+        <div class="modal-section">
+          <h4>Muscles Targeted</h4>
+          <ul id="modal-muscles"></ul>
+        </div>
+        <div class="modal-section">
+          <h4>Key Form Cues</h4>
+          <ul id="modal-cues"></ul>
+        </div>
+      </div>
+      <div class="modal-tips" id="modal-tips"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page-guide -->
+
+<!-- ===== BMI CALCULATOR PAGE ===== -->
+<div id="page-bmi" style="display:none;">
+<div class="page-section">
+  <div class="page-header">
+    <div class="hero-tag">Body Mass Index Calculator</div>
+    <h2>Know Your <span style="color:var(--accent);">Numbers.</span></h2>
+    <p>BMI is a screening tool — not a diagnosis. Use it alongside body composition, strength metrics, and how you feel.</p>
+  </div>
+
+  <!-- UNIT TOGGLE -->
+  <div style="display:flex;justify-content:center;margin-bottom:1.5rem;">
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);display:flex;overflow:hidden;padding:4px;gap:4px;">
+      <button id="unit-metric" onclick="setUnit('metric')" style="background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;padding:9px 20px;cursor:pointer;font-size:0.85rem;border-radius:6px;transition:all 0.2s;">📏 Metric (kg/cm)</button>
+      <button id="unit-imperial" onclick="setUnit('imperial')" style="background:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;padding:9px 20px;cursor:pointer;font-size:0.85rem;border-radius:6px;transition:all 0.2s;">🇺🇸 Imperial (lbs/ft)</button>
+    </div>
+  </div>
+
+  <!-- INPUT FORM -->
+  <div class="card-surface">
+    <div class="card-surface-label">📝 Your Details</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:1rem;" id="bmi-inputs">
+      <div class="bmi-field">
+        <label class="bmi-label">Age (years)</label>
+        <input class="bmi-input" id="bmi-age" type="number" inputmode="numeric" min="10" max="100" placeholder="25" oninput="calculateBMI()">
+      </div>
+      <div class="bmi-field">
+        <label class="bmi-label">Biological Sex</label>
+        <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
+          <button class="sex-btn active" id="sex-male" onclick="setSex('male')">♂ Male</button>
+          <button class="sex-btn" id="sex-female" onclick="setSex('female')">♀ Female</button>
+        </div>
+      </div>
+      <div class="bmi-field">
+        <label class="bmi-label">Activity Level</label>
+        <select class="bmi-select" id="bmi-activity" onchange="calculateBMI()">
+          <option value="1.2">Sedentary (desk job)</option>
+          <option value="1.375">Light (1–3x/week)</option>
+          <option value="1.55" selected>Moderate (3–5x/week)</option>
+          <option value="1.725">Very active (6–7x/week)</option>
+          <option value="1.9">Athlete (2x/day)</option>
+        </select>
+      </div>
+      <div class="bmi-field" id="height-metric">
+        <label class="bmi-label">Height (cm)</label>
+        <input class="bmi-input" id="bmi-height-cm" type="number" inputmode="numeric" min="100" max="250" placeholder="175" oninput="calculateBMI()">
+      </div>
+      <div class="bmi-field" id="height-imperial" style="display:none;">
+        <label class="bmi-label">Height</label>
+        <div style="display:flex;gap:0.5rem;margin-top:0.25rem;">
+          <input class="bmi-input" id="bmi-height-ft" type="number" inputmode="numeric" min="3" max="8" placeholder="5 ft" style="flex:1;" oninput="calculateBMI()">
+          <input class="bmi-input" id="bmi-height-in" type="number" inputmode="numeric" min="0" max="11" placeholder="10 in" style="flex:1;" oninput="calculateBMI()">
+        </div>
+      </div>
+      <div class="bmi-field" id="weight-field">
+        <label class="bmi-label" id="weight-label">Weight (kg)</label>
+        <input class="bmi-input" id="bmi-weight" type="number" inputmode="decimal" min="30" max="300" placeholder="70" oninput="calculateBMI()">
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT PANEL -->
+  <div id="bmi-result" style="display:none;">
+
+    <!-- BMI Score -->
+    <div class="card-surface" style="text-align:center;animation:fadeUp 0.4s ease;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;">Your BMI Score</div>
+      <div id="bmi-number" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,6rem);line-height:1;color:var(--accent);text-shadow:0 0 40px rgba(232,255,0,0.25);">--</div>
+      <div id="bmi-category" style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.1rem,4vw,1.4rem);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:0.2rem;">--</div>
+      <div id="bmi-category-desc" style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.6;"></div>
+      <!-- BMI Scale Bar -->
+      <div style="margin-top:1.75rem;max-width:480px;margin-left:auto;margin-right:auto;">
+        <div style="position:relative;height:10px;background:linear-gradient(to right,#4fc3f7 0%,#4fc3f7 18.5%,#66bb6a 18.5%,#66bb6a 46.15%,#ffa726 46.15%,#ffa726 61.54%,#ef5350 61.54%,#ef5350 100%);border-radius:99px;">
+          <div id="bmi-marker" style="position:absolute;top:-5px;width:3px;height:20px;background:#fff;border-radius:99px;box-shadow:0 0 8px rgba(255,255,255,0.6);transform:translateX(-50%);transition:left 0.5s cubic-bezier(0.34,1.3,0.64,1);"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:0.65rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">
+          <span>16</span><span>18.5</span><span>25</span><span>30</span><span>40</span>
+        </div>
+        <div style="display:flex;justify-content:space-around;margin-top:3px;font-size:0.6rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;">
+          <span style="color:#4fc3f7;">Under</span>
+          <span style="color:#66bb6a;">Normal</span>
+          <span style="color:#ffa726;">Over</span>
+          <span style="color:#ef5350;">Obese</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS GRID -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;margin-bottom:1.25rem;">
+      <div class="stat-card"><div class="stat-label">Healthy Weight Range</div><div class="stat-value" id="stat-range">--</div></div>
+      <div class="stat-card"><div class="stat-label">Body Fat Estimate</div><div class="stat-value" id="stat-bf">--</div></div>
+      <div class="stat-card"><div class="stat-label">Daily TDEE</div><div class="stat-value" id="stat-tdee">--</div></div>
+      <div class="stat-card"><div class="stat-label">BMR (At Rest)</div><div class="stat-value" id="stat-bmr">--</div></div>
+    </div>
+
+    <!-- CALORIE GOALS -->
+    <div class="card-surface">
+      <div class="card-surface-label">Calorie Targets by Goal</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;">
+        <div style="text-align:center;padding:0.9rem;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border2);">
+          <div style="font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-family:'Barlow Condensed',sans-serif;margin-bottom:0.4rem;">🔥 Cut</div>
+          <div id="cal-cut" style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#ef5350;">--</div>
+          <div style="font-size:0.62rem;color:var(--muted);">kcal/day (−500)</div>
+        </div>
+        <div style="text-align:center;padding:0.9rem;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--accent);box-shadow:0 0 16px rgba(232,255,0,0.06);">
+          <div style="font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-family:'Barlow Condensed',sans-serif;margin-bottom:0.4rem;">⚖️ Maintain</div>
+          <div id="cal-maintain" style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--accent);">--</div>
+          <div style="font-size:0.62rem;color:var(--muted);">kcal/day</div>
+        </div>
+        <div style="text-align:center;padding:0.9rem;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border2);">
+          <div style="font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-family:'Barlow Condensed',sans-serif;margin-bottom:0.4rem;">💪 Bulk</div>
+          <div id="cal-bulk" style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#66bb6a;">--</div>
+          <div style="font-size:0.62rem;color:var(--muted);">kcal/day (+300)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRAINING RECOMMENDATION -->
+    <div class="modal-tips" id="bmi-recommendation" style="margin-bottom:1.5rem;"></div>
+
+  </div>
+
+</div><!-- end page-section -->
+</div><!-- end page-bmi -->
+
+<!-- ===== AUTH MODAL ===== -->
+<div id="auth-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:var(--surface);border:1px solid var(--border2);border-top:3px solid var(--accent);border-radius:var(--radius);width:100%;max-width:420px;padding:clamp(1.5rem,4vw,2.5rem);position:relative;animation:fadeUp 0.3s ease;max-height:92vh;overflow-y:auto;">
+    <button onclick="closeAuthModal()" style="position:absolute;top:1rem;right:1rem;background:var(--surface2);border:1px solid var(--border2);color:var(--muted);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;">✕</button>
+    <div id="auth-modal-title" style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;color:var(--accent);margin-bottom:0.2rem;"></div>
+    <div id="auth-modal-sub" style="color:var(--muted);font-size:0.84rem;margin-bottom:1.5rem;line-height:1.5;"></div>
+    <div id="auth-error" style="display:none;background:rgba(255,60,0,0.1);border:1px solid rgba(255,60,0,0.3);color:var(--accent2);padding:0.75rem 1rem;border-radius:var(--radius-sm);font-size:0.84rem;margin-bottom:1rem;"></div>
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <div id="auth-name-field" style="display:none;">
+        <label class="bmi-label">Full Name</label>
+        <input class="bmi-input" id="auth-name" type="text" placeholder="John Smith" autocomplete="name">
+      </div>
+      <div>
+        <label class="bmi-label">Email</label>
+        <input class="bmi-input" id="auth-email" type="email" placeholder="you@example.com" autocomplete="email" inputmode="email">
+      </div>
+      <div>
+        <label class="bmi-label">Password</label>
+        <div class="pw-wrap">
+          <input class="bmi-input" id="auth-password" type="password" placeholder="••••••••" autocomplete="current-password">
+          <button type="button" class="pw-toggle" onclick="togglePw('auth-password', this)" aria-label="Show password">
+            <svg class="eye-icon eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="eye-icon eye-closed" viewBox="0 0 24 24" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+      </div>
+      <div id="auth-confirm-field" style="display:none;">
+        <label class="bmi-label">Confirm Password</label>
+        <div class="pw-wrap">
+          <input class="bmi-input" id="auth-confirm" type="password" placeholder="••••••••" autocomplete="new-password">
+          <button type="button" class="pw-toggle" onclick="togglePw('auth-confirm', this)" aria-label="Show confirm password">
+            <svg class="eye-icon eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="eye-icon eye-closed" viewBox="0 0 24 24" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button id="auth-submit-btn" onclick="submitAuth()" style="width:100%;margin-top:1.25rem;background:var(--accent);color:#000;font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:3px;border:none;padding:14px;border-radius:var(--radius-sm);cursor:pointer;transition:opacity 0.2s;min-height:48px;">LOGIN</button>
+    <div style="text-align:center;margin-top:1rem;font-size:0.84rem;color:var(--muted);">
+      <span id="auth-switch-text"></span>
+      <button id="auth-switch-btn" onclick="switchAuthMode()" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:0.84rem;font-family:'Barlow',sans-serif;text-decoration:underline;margin-left:0.25rem;"></button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CALORIE TRACKER PAGE ===== -->
+<div id="page-calories" style="display:none;">
+<div class="page-section">
+
+  <!-- LOCKED STATE -->
+  <div id="cal-locked" style="text-align:center;padding:clamp(3rem,10vw,6rem) 1.5rem;">
+    <div style="font-size:3.5rem;margin-bottom:1rem;">🔒</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,6vw,3rem);letter-spacing:2px;color:var(--accent);margin-bottom:0.5rem;">Login Required</div>
+    <p style="color:var(--muted);max-width:360px;margin:0 auto 1.75rem;line-height:1.7;font-size:0.92rem;">Sign in to track your daily calories, log meals, and see your full history saved across sessions.</p>
+    <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+      <button onclick="openAuthModal('login')" class="btn-outline" style="padding:12px 28px;min-height:48px;font-size:0.9rem;border-color:var(--accent);color:var(--accent);">Login</button>
+      <button onclick="openAuthModal('signup')" class="btn-primary" style="padding:12px 28px;min-height:48px;font-size:0.9rem;">Sign Up Free</button>
+    </div>
+  </div>
+
+  <!-- ACTIVE STATE -->
+  <div id="cal-active" style="display:none;">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="hero-tag">Daily Nutrition Tracker</div>
+      <h2>Track Every <span style="color:var(--accent);">Calorie.</span></h2>
+      <p>Search any food by name — AI finds the calories. Your daily log saves to your account.</p>
+    </div>
+
+    <!-- CALORIE RING + STATS -->
+    <div class="card-surface" style="display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:center;">
+      <div style="position:relative;width:110px;height:110px;flex-shrink:0;">
+        <svg width="110" height="110" viewBox="0 0 110 110" style="transform:rotate(-90deg);">
+          <circle cx="55" cy="55" r="46" fill="none" stroke="var(--border2)" stroke-width="9"/>
+          <circle id="cal-ring" cx="55" cy="55" r="46" fill="none" stroke="var(--accent)" stroke-width="9" stroke-linecap="round" stroke-dasharray="289.1" stroke-dashoffset="289.1" style="transition:stroke-dashoffset 0.6s ease,stroke 0.4s;"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+          <div id="ring-pct" style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--accent);line-height:1;">0%</div>
+          <div style="font-size:0.55rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;">of goal</div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+          <div id="cal-date" style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;color:var(--text2);letter-spacing:1px;"></div>
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);">Goal</span>
+            <input id="cal-goal-input" type="number" inputmode="numeric" value="2000" min="1000" max="5000" step="50" style="background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--accent);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;width:80px;padding:4px 8px;text-align:center;outline:none;" oninput="updateGoal(this.value)">
+            <span style="font-size:0.75rem;color:var(--muted);">kcal</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;">
+          <div style="text-align:center;padding:0.6rem;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border2);">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--accent);" id="stat-consumed">0</div>
+            <div style="font-size:0.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;">Eaten</div>
+          </div>
+          <div style="text-align:center;padding:0.6rem;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border2);">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:#66bb6a;" id="stat-remaining">2000</div>
+            <div style="font-size:0.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;">Left</div>
+          </div>
+          <div style="text-align:center;padding:0.6rem;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border2);">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--accent2);" id="stat-entries">0</div>
+            <div style="font-size:0.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;">Items</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOD SEARCH -->
+    <div class="card-surface">
+      <div class="card-surface-label">🍎 Add Food</div>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+        <div style="position:relative;flex:1;min-width:200px;">
+          <input id="food-search-input" class="bmi-input" type="text" placeholder="e.g. 2 eggs, 100g chicken, 1 banana..." onkeydown="if(event.key==='Enter')searchFood()">
+          <div id="food-search-spinner" style="display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;"></div>
+        </div>
+        <select id="meal-type" class="bmi-select" style="width:130px;">
+          <option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option>
+        </select>
+        <button onclick="searchFood()" id="food-search-btn" class="btn-primary" style="padding:11px 22px;font-size:1rem;letter-spacing:2px;white-space:nowrap;">🔍 Search</button>
+      </div>
+
+      <div id="food-result-preview" style="display:none;background:var(--surface2);border:1px solid var(--border2);border-left:3px solid var(--accent);border-radius:var(--radius);padding:1.1rem;animation:fadeUp 0.25s ease;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:0.75rem;">
+          <div style="flex:1;min-width:0;">
+            <div id="fr-name" style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:0.2rem;"></div>
+            <div id="fr-detail" style="font-size:0.8rem;color:var(--muted);line-height:1.5;"></div>
+          </div>
+          <div style="text-align:center;flex-shrink:0;">
+            <div id="fr-calories" style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--accent);line-height:1;"></div>
+            <div style="font-size:0.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;">kcal</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;margin-bottom:0.75rem;">
+          <div style="text-align:center;padding:0.5rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border2);">
+            <div id="fr-protein" style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#4fc3f7;"></div>
+            <div style="font-size:0.58rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;">Protein g</div>
+          </div>
+          <div style="text-align:center;padding:0.5rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border2);">
+            <div id="fr-carbs" style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#ffa726;"></div>
+            <div style="font-size:0.58rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;">Carbs g</div>
+          </div>
+          <div style="text-align:center;padding:0.5rem;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border2);">
+            <div id="fr-fat" style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#ef5350;"></div>
+            <div style="font-size:0.58rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;">Fat g</div>
+          </div>
+        </div>
+        <button onclick="addFoodToLog()" style="width:100%;background:rgba(232,255,0,0.1);border:1px solid var(--accent);color:var(--accent);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;padding:11px;border-radius:var(--radius-sm);cursor:pointer;transition:background 0.2s;min-height:44px;">+ Add to Log</button>
+      </div>
+      <div id="food-error" style="display:none;margin-top:0.75rem;color:var(--accent2);font-size:0.84rem;padding:0.7rem 0.9rem;background:rgba(255,60,0,0.07);border:1px solid rgba(255,60,0,0.2);border-radius:var(--radius-sm);"></div>
+    </div>
+
+    <!-- DAILY LOG -->
+    <div class="card-surface">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+        <div class="card-surface-label" style="margin-bottom:0;">📋 Today's Log</div>
+        <div style="display:flex;gap:0.4rem;">
+          <button onclick="showHistory()" style="background:none;border:1px solid var(--border2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;padding:6px 12px;border-radius:var(--radius-sm);cursor:pointer;min-height:36px;">📅 History</button>
+          <button onclick="clearToday()" style="background:none;border:1px solid rgba(255,60,0,0.3);color:var(--accent2);font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:1px;text-transform:uppercase;padding:6px 12px;border-radius:var(--radius-sm);cursor:pointer;min-height:36px;">🗑 Clear</button>
+        </div>
+      </div>
+      <div id="meal-sections"></div>
+      <div id="log-empty" style="text-align:center;padding:2.5rem 1rem;color:var(--muted);">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">🍽️</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;letter-spacing:2px;text-transform:uppercase;">No foods logged today</div>
+        <div style="font-size:0.84rem;margin-top:0.4rem;">Search for food above to get started</div>
+      </div>
+      <div id="macro-section" style="display:none;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">Macros</div>
+        <div style="display:flex;height:8px;border-radius:99px;overflow:hidden;gap:2px;margin-bottom:0.5rem;">
+          <div id="bar-protein" style="background:#4fc3f7;transition:width 0.5s;border-radius:3px;"></div>
+          <div id="bar-carbs" style="background:#ffa726;transition:width 0.5s;border-radius:3px;"></div>
+          <div id="bar-fat" style="background:#ef5350;transition:width 0.5s;border-radius:3px;"></div>
+        </div>
+        <div style="display:flex;gap:1.25rem;font-size:0.78rem;font-family:'Barlow Condensed',sans-serif;flex-wrap:wrap;">
+          <span style="color:#4fc3f7;">● Protein <strong id="total-protein">0g</strong></span>
+          <span style="color:#ffa726;">● Carbs <strong id="total-carbs">0g</strong></span>
+          <span style="color:#ef5350;">● Fat <strong id="total-fat">0g</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div id="history-panel" style="display:none;" class="card-surface">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+        <div class="card-surface-label" style="margin-bottom:0;">📅 Last 7 Days</div>
+        <button onclick="document.getElementById('history-panel').style.display='none'" style="background:none;border:1px solid var(--border2);color:var(--muted);font-size:0.78rem;padding:5px 10px;border-radius:var(--radius-sm);cursor:pointer;">Close</button>
+      </div>
+      <div id="history-list"></div>
+    </div>
+
+  </div><!-- end cal-active -->
+</div><!-- end page-section -->
+</div><!-- end page-calories -->
+
+<footer>
+  Built for lifters, by lifters &nbsp;·&nbsp; <strong>IRONFORM</strong> &nbsp;·&nbsp; Always consult a certified trainer
+</footer>
+
+<script>
+// ===================== DATA =====================
+const data = {
+  chest: [
+    {
+      title: "Barbell Bench Press",
+      video: "rT7DgCr-3pg",
+      desc: "The king of chest exercises. The flat bench press builds overall chest mass and strength using a barbell for maximum load potential.",
+      primary: "Pec Major (Mid)",
+      secondary: "Anterior Deltoid, Triceps",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Pectoralis Major (mid/sternal)", "Anterior Deltoid", "Triceps Brachii", "Serratus Anterior"],
+      cues: ["Retract your shoulder blades", "Drive feet into the floor", "Bar path slightly diagonal", "Touch lower chest, not neck", "Full lockout at top"],
+      tips: "<strong>Pro Tip:</strong> Leg drive isn't cheating — it creates full-body tension that lets you press more and stay safer. Plant your feet firmly and push through the floor.",
+      sets: "3–5", reps: "6–10", rest: "2–3 min"
+    },
+    {
+      title: "Incline Barbell Press",
+      video: "jPLdzuHckI8",
+      desc: "Set at 30–45°, the incline press targets the upper pecs (clavicular head) heavily — the area most responsible for a 'full' chest look.",
+      primary: "Upper Pec Major",
+      secondary: "Anterior Deltoid, Triceps",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Pectoralis Major (clavicular/upper)", "Anterior Deltoid", "Triceps Brachii"],
+      cues: ["Keep angle at 30–45°", "Don't go too steep (turns into shoulder press)", "Squeeze at top", "Control the descent for 2s", "Tuck elbows slightly"],
+      tips: "<strong>Angle matters:</strong> Above 45° shifts too much load to the front deltoid. Stick to 30–45° to max upper chest activation.",
+      sets: "3–4", reps: "8–10", rest: "2–3 min"
+    },
+    {
+      title: "Dumbbell Flyes",
+      video: "eozdVDA78K0",
+      desc: "An isolation movement that prioritizes the stretch at the bottom of the motion — unique to flies and critical for developing chest width and depth.",
+      primary: "Pec Major (Mid/Outer)",
+      secondary: "Anterior Deltoid",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Pectoralis Major (sternocostal)", "Pectoralis Minor", "Anterior Deltoid"],
+      cues: ["Slight bend in elbows throughout", "Go for a deep stretch at bottom", "Think 'hugging a barrel'", "Don't let dumbbells touch at top", "Use lighter weight than you think"],
+      tips: "<strong>The stretch is the point:</strong> Unlike presses, the value in flyes is the deep bottom stretch. Prioritise range of motion over load.",
+      sets: "3", reps: "10–15", rest: "1–2 min"
+    },
+    {
+      title: "Cable Crossover",
+      video: "taI4XduLpTk",
+      desc: "Cables maintain constant tension throughout the movement, especially at peak contraction — something free weights can't offer. Great for shaping the chest.",
+      primary: "Pec Major (Mid/Inner)",
+      secondary: "Anterior Deltoid",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Pectoralis Major (inner/mid)", "Anterior Deltoid", "Biceps Brachii (stabiliser)"],
+      cues: ["Lean forward slightly", "Cross hands at the bottom", "Hold the squeeze 1 second", "Keep a soft elbow bend", "Control the return"],
+      tips: "<strong>Cable angle = chest region:</strong> High cables = lower chest. Low cables = upper chest. Mid cables = mid chest. Use all three in your program.",
+      sets: "3", reps: "12–15", rest: "1–1.5 min"
+    },
+    {
+      title: "Push-Ups (Weighted / Archer)",
+      video: "IODxDxX7oi4",
+      desc: "Push-ups are underrated. Weighted or archer variations provide serious stimulus, allow natural shoulder blade movement (unlike bench), and can be done anywhere.",
+      primary: "Pec Major",
+      secondary: "Serratus Anterior, Triceps, Core",
+      difficulty: "Beginner",
+      type: "Compound",
+      muscles: ["Pectoralis Major", "Serratus Anterior", "Triceps", "Core (stabiliser)"],
+      cues: ["Full range of motion", "Protract shoulder blades at top", "Body in straight line", "Elbows at ~45° from torso", "Pause at the bottom"],
+      tips: "<strong>Protraction advantage:</strong> At the top of a push-up, you can protract the shoulder blades (round them forward) — this adds extra serratus and upper pec activation not possible with a fixed bench.",
+      sets: "3–4", reps: "8–15", rest: "1.5–2 min"
+    },
+    {
+      title: "Decline Bench Press",
+      video: "LfyQTbIB6os",
+      desc: "The decline angle shifts emphasis to the lower pecs (sternal head) and typically allows heavier loads due to a more mechanical-advantage position.",
+      primary: "Lower Pec Major",
+      secondary: "Triceps, Anterior Deltoid",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Pectoralis Major (sternal/lower)", "Triceps Brachii", "Anterior Deltoid"],
+      cues: ["Angle between 15–30° decline", "Don't go too steep", "Keep wrists neutral", "Full range of motion", "Controlled descent"],
+      tips: "<strong>Lower chest detail:</strong> If the area where your pecs meet your abs looks underdeveloped, add decline work. Also try high-to-low cable crossovers.",
+      sets: "3–4", reps: "8–10", rest: "2–3 min"
+    },
+    {
+      title: "Dumbbell Pullover",
+      video: "FK4rHfPuHGo",
+      desc: "A classic mass builder that stretches the entire chest and also loads the lats and serratus anterior. A unique movement that bridges chest and back training.",
+      primary: "Pec Major, Lats",
+      secondary: "Serratus Anterior, Triceps (long head)",
+      difficulty: "Intermediate",
+      type: "Isolation",
+      muscles: ["Pectoralis Major", "Latissimus Dorsi", "Serratus Anterior", "Triceps (long head)"],
+      cues: ["Keep hips low on the bench", "Full stretch at bottom", "Slight elbow bend throughout", "Feel the pec and lat load", "Don't use momentum"],
+      tips: "<strong>Stretch monster:</strong> The dumbbell pullover provides one of the deepest chest stretches possible. Keep the weight moderate and prioritise the stretched position under load.",
+      sets: "3", reps: "10–12", rest: "1.5–2 min"
+    },
+    {
+      title: "Machine Chest Press",
+      video: "xn_s8aECE9I",
+      desc: "The machine press is perfect for beginners learning the movement pattern and for advanced lifters to safely go to failure or train post-fatigue.",
+      primary: "Pec Major",
+      secondary: "Anterior Deltoid, Triceps",
+      difficulty: "Beginner",
+      type: "Compound",
+      muscles: ["Pectoralis Major", "Anterior Deltoid", "Triceps Brachii"],
+      cues: ["Set seat so handles align with mid-chest", "Squeeze at full extension", "Don't let shoulders roll forward", "Control the negative", "Good for drop sets"],
+      tips: "<strong>Best for drop sets:</strong> Because you can quickly change the pin, machines are ideal for drop sets and failure training — use them at the end of your chest session."
+    }
+  ],
+  shoulder: [
+    {
+      title: "Overhead Press (Barbell)",
+      video: "2yjwXTZQDDI",
+      desc: "The foundational compound shoulder movement. Builds overall deltoid mass and strength, especially the anterior and lateral heads.",
+      primary: "Anterior & Lateral Deltoid",
+      secondary: "Triceps, Upper Traps, Serratus",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Anterior Deltoid", "Lateral Deltoid", "Triceps Brachii", "Upper Trapezius", "Serratus Anterior"],
+      cues: ["Bar starts at upper chest", "Tuck elbows slightly (not flared)", "Push bar up and back slightly", "Squeeze glutes for stability", "Full lockout at top"],
+      tips: "<strong>The press is king:</strong> Like the squat for legs, the overhead press is the compound foundation for shoulders. Get strong at this before worrying about isolation work.",
+      sets: "4", reps: "6–10", rest: "2–3 min"
+    },
+    {
+      title: "Dumbbell Lateral Raises",
+      video: "3VcKaXpzqRo",
+      desc: "The most important exercise for building shoulder width. Targets the lateral (middle) deltoid — the head responsible for the coveted 'wide' look.",
+      primary: "Lateral Deltoid",
+      secondary: "Supraspinatus",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Lateral Deltoid", "Supraspinatus (rotator cuff)"],
+      cues: ["Lean slightly forward", "Lead with elbows, not wrists", "Pinky slightly higher at top", "Stop at shoulder height", "Control the descent — don't drop"],
+      tips: "<strong>Partial reps hack:</strong> The lateral delt is most active in the top half of the range. Use lighter weight, go slower, and consider cable laterals for constant tension.",
+      sets: "3–4", reps: "12–20", rest: "1–1.5 min"
+    },
+    {
+      title: "Face Pulls",
+      video: "rep-qVOkidI",
+      desc: "Critically important for posterior deltoid development and shoulder health. Helps correct the internal rotation caused by excessive pressing.",
+      primary: "Posterior Deltoid",
+      secondary: "Rotator Cuff, Rhomboids, Rear Traps",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Posterior Deltoid", "External Rotators", "Rhomboids", "Rear Trapezius"],
+      cues: ["Rope at eye level", "Pull to face — not neck", "Flare elbows out wide", "Externally rotate at the end", "Slow and controlled"],
+      tips: "<strong>Do these EVERY session:</strong> Most lifters have overdeveloped front delts from pressing. Face pulls correct this imbalance and keep your rotator cuff healthy.",
+      sets: "3–4", reps: "15–20", rest: "1 min"
+    },
+    {
+      title: "Arnold Press",
+      video: "6Z15_WdXmVw",
+      desc: "The Arnold Press rotates through the full range of deltoid rotation, hitting all three heads in one fluid movement. Named after the GOAT himself.",
+      primary: "All 3 Deltoid Heads",
+      secondary: "Triceps, Serratus",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Anterior Deltoid", "Lateral Deltoid", "Posterior Deltoid", "Triceps"],
+      cues: ["Start palms facing you", "Rotate outward as you press up", "Full rotation by the top", "Reverse on the way down", "Controlled throughout"],
+      tips: "<strong>Full-range advantage:</strong> The rotation at the start specifically loads the anterior delt in a stretched position — something standard pressing misses.",
+      sets: "3–4", reps: "8–12", rest: "2 min"
+    },
+    {
+      title: "Rear Delt Fly (Machine / Dumbbell)",
+      video: "EA7u4Q_8HQ0",
+      desc: "A direct posterior deltoid isolation exercise. The rear delt is often the most neglected part of the shoulder, leading to postural problems.",
+      primary: "Posterior Deltoid",
+      secondary: "Rhomboids, Teres Minor",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Posterior Deltoid", "Rhomboids", "Teres Minor", "Infraspinatus"],
+      cues: ["Hinge forward at hip", "Lead with elbows, not hands", "Arms parallel to floor at peak", "Pinch shoulder blades together", "Pause at top"],
+      tips: "<strong>Posterior deltoid secret:</strong> Hinge forward 70–90° (almost parallel to floor) to take the traps out of the movement and maximally isolate the rear delt.",
+      sets: "3–4", reps: "12–20", rest: "1–1.5 min"
+    },
+    {
+      title: "Cable Lateral Raise",
+      video: "PPzMoEOaIgA",
+      desc: "A cable variation of the lateral raise that provides constant tension — the cable version is often more effective than dumbbells for lateral delt growth.",
+      primary: "Lateral Deltoid",
+      secondary: "Supraspinatus",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Lateral Deltoid", "Supraspinatus"],
+      cues: ["Cable at ankle/wrist height", "Pull across body in an arc", "Elbow leads the motion", "Don't lean excessively", "Squeeze at the top"],
+      tips: "<strong>Tension curve:</strong> The cable creates more tension at the bottom of the lift (hardest part) compared to a dumbbell, which makes it superior for hypertrophy.",
+      sets: "3", reps: "12–15", rest: "1–1.5 min"
+    },
+    {
+      title: "Upright Row",
+      video: "amTsNdRUXoU",
+      desc: "An underrated compound movement targeting the lateral deltoid and upper trapezius. Use a wide grip to prioritise the lateral delt over the traps.",
+      primary: "Lateral Deltoid, Upper Traps",
+      secondary: "Biceps, Anterior Deltoid",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Lateral Deltoid", "Upper Trapezius", "Biceps Brachii", "Anterior Deltoid"],
+      cues: ["Wide grip (wider = more delt)", "Pull to chin height", "Lead with elbows high and wide", "Don't shrug — pull out, not up", "Light weight, full range"],
+      tips: "<strong>Grip width matters:</strong> Narrow grip = more trap. Wide grip = more lateral delt. If you feel shoulder impingement, widen the grip or skip this one.",
+      sets: "3–4", reps: "10–12", rest: "1.5–2 min"
+    }
+  ],
+  back: [
+    {
+      title: "Deadlift",
+      video: "op9kVnSso6Q",
+      desc: "The deadlift is one of the greatest full-body movements. It builds the entire posterior chain — lats, traps, rhomboids, erectors, glutes, and hamstrings.",
+      primary: "Entire Back",
+      secondary: "Glutes, Hamstrings, Quads, Grip",
+      difficulty: "Advanced",
+      type: "Compound",
+      muscles: ["Erector Spinae", "Latissimus Dorsi", "Trapezius", "Rhomboids", "Glutes", "Hamstrings"],
+      cues: ["Bar over mid-foot", "Hinge, don't squat", "Lats tight — 'protect your armpits'", "Drive floor away, not bar up", "Lock out hips and knees together"],
+      tips: "<strong>Wedge into the bar:</strong> Before you pull, 'wedge' your hips down and create tension in the system. A slack pull is how injuries happen.",
+      sets: "3–5", reps: "3–5", rest: "3–5 min"
+    },
+    {
+      title: "Pull-Up / Weighted Pull-Up",
+      video: "eGo4IYlbE5g",
+      desc: "The upper body equivalent of the squat. Pull-ups build lat width, bicep thickness, and overall back mass better than almost any other exercise.",
+      primary: "Latissimus Dorsi",
+      secondary: "Biceps, Rhomboids, Rear Delt",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Latissimus Dorsi", "Biceps Brachii", "Rhomboids", "Posterior Deltoid", "Teres Major"],
+      cues: ["Depress shoulder blades to start", "Pull elbows to hips, not chin", "Full hang at the bottom", "Lean back slightly", "Squeeze lats at top"],
+      tips: "<strong>Not a chin-up:</strong> Pronated (overhand) grip = more lat. Supinated (underhand) = more bicep. Both are great, but pull-ups are superior for back width.",
+      sets: "3–4", reps: "5–10", rest: "2–3 min"
+    },
+    {
+      title: "Barbell Bent-Over Row",
+      video: "FWJR5Ve8bnQ",
+      desc: "The foundational back thickness exercise. The bent-over row builds the mid and upper back (traps, rhomboids) as well as the lats.",
+      primary: "Lats, Rhomboids, Traps",
+      secondary: "Rear Delt, Biceps, Erectors",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Latissimus Dorsi", "Rhomboids", "Trapezius", "Posterior Deltoid", "Biceps Brachii", "Erector Spinae"],
+      cues: ["Hinge to ~45°", "Bar rows to lower chest/navel", "Pull elbows back and up", "Retract and depress shoulder blades", "Spine neutral throughout"],
+      tips: "<strong>Overhand vs underhand:</strong> Overhand (pronated) hits more upper back/rhomboids. Underhand (supinated) hits more lats and allows a bigger range of motion.",
+      sets: "4", reps: "6–10", rest: "2–3 min"
+    },
+    {
+      title: "Lat Pulldown",
+      video: "CAwf7n6Luuc",
+      desc: "The lat pulldown is the go-to lat isolation movement, perfect for those who can't do pull-ups yet — or for adding volume after you've done weighted pull-ups.",
+      primary: "Latissimus Dorsi",
+      secondary: "Biceps, Teres Major",
+      difficulty: "Beginner",
+      type: "Compound",
+      muscles: ["Latissimus Dorsi", "Teres Major", "Biceps Brachii", "Posterior Deltoid"],
+      cues: ["Lean back slightly", "Pull bar to upper chest", "Initiate with lats, not arms", "Depress shoulder blades first", "Full stretch at top"],
+      tips: "<strong>Initiation is everything:</strong> Before you pull, depress your shoulder blades (push them down). This pre-activates the lats and ensures they — not the biceps — do the work.",
+      sets: "3–4", reps: "8–12", rest: "2 min"
+    },
+    {
+      title: "Cable Row (Seated)",
+      video: "GZbfZ033f74",
+      desc: "The seated cable row is a mid-back staple. It builds rhomboid and trap thickness while also hitting the lats. Keep a neutral spine throughout.",
+      primary: "Rhomboids, Mid-Traps",
+      secondary: "Lats, Rear Delt, Biceps",
+      difficulty: "Beginner",
+      type: "Compound",
+      muscles: ["Rhomboids", "Middle Trapezius", "Latissimus Dorsi", "Posterior Deltoid", "Biceps Brachii"],
+      cues: ["Don't rock forward and back", "Pull to lower chest/solar plexus", "Retract shoulder blades fully", "Keep chest up throughout", "Pause and squeeze at peak"],
+      tips: "<strong>The pause matters:</strong> At the fully contracted position, hold for 1 second and try to squeeze your shoulder blades together. This significantly improves mid-back activation.",
+      sets: "3–4", reps: "10–12", rest: "1.5–2 min"
+    },
+    {
+      title: "T-Bar Row",
+      video: "j3Igk5nyZE4",
+      desc: "An excellent compound row variation that allows heavy loading while reducing lower back stress compared to a barbell bent-over row.",
+      primary: "Lats, Mid Traps, Rhomboids",
+      secondary: "Rear Delt, Biceps",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Latissimus Dorsi", "Rhomboids", "Trapezius", "Posterior Deltoid"],
+      cues: ["Chest supported = safer lower back", "Full range of motion", "Neutral spine always", "Squeeze at the top", "Control the weight down"],
+      tips: "<strong>Use chest support:</strong> The chest-supported T-bar row removes lower back involvement entirely, letting you focus purely on back muscles. Use it when your lower back is fatigued.",
+      sets: "3–4", reps: "8–12", rest: "2–3 min"
+    },
+    {
+      title: "Single-Arm Dumbbell Row",
+      video: "roCP6wCXPqo",
+      desc: "A unilateral row that allows a greater range of motion than barbell rows and helps correct left-right imbalances. Great for lat thickness.",
+      primary: "Lats, Rhomboids",
+      secondary: "Biceps, Rear Delt",
+      difficulty: "Beginner",
+      type: "Compound",
+      muscles: ["Latissimus Dorsi", "Rhomboids", "Biceps Brachii", "Posterior Deltoid"],
+      cues: ["Let arm hang fully at bottom", "Pull dumbbell to hip/waist", "Rotate torso slightly at top", "Don't jerk the weight", "Full stretch at bottom"],
+      tips: "<strong>Go heavy:</strong> The single-arm row is one of the safest exercises to load heavy. Don't be afraid to use straps and pull serious weight — the lat loves heavy rowing.",
+      sets: "3–4", reps: "8–12", rest: "1.5–2 min"
+    }
+  ],
+  legs: [
+    {
+      title: "Barbell Back Squat",
+      video: "ultWZbUMPL8",
+      desc: "The king of all exercises. The back squat is the most effective movement for overall quad, glute, and hamstring development — nothing builds legs like a heavy squat.",
+      primary: "Quadriceps, Glutes",
+      secondary: "Hamstrings, Erectors, Core",
+      difficulty: "Advanced",
+      type: "Compound",
+      muscles: ["Quadriceps (all 4 heads)", "Gluteus Maximus", "Hamstrings", "Erector Spinae", "Core"],
+      cues: ["Chest up, neutral spine", "Push knees out over toes", "Hit depth (hip crease below knee)", "Drive through whole foot", "Big air before descent"],
+      tips: "<strong>Depth is everything:</strong> Below parallel activates the glutes dramatically more than partial squats. Box squats are a great tool to groove proper depth.",
+      sets: "4–5", reps: "4–8", rest: "3–5 min"
+    },
+    {
+      title: "Romanian Deadlift (RDL)",
+      video: "JCXUYuzwNrM",
+      desc: "The best hamstring-specific exercise. The RDL emphasises hip-hinge mechanics, training the hamstrings under maximum stretch — key for growth.",
+      primary: "Hamstrings (hip extension)",
+      secondary: "Glutes, Erector Spinae",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Biceps Femoris", "Semitendinosus", "Semimembranosus", "Gluteus Maximus", "Erector Spinae"],
+      cues: ["Soft knees throughout", "Hinge at hip — not squat", "Bar stays close to legs", "Feel stretch in hamstrings", "Stop when back rounds"],
+      tips: "<strong>Feel the stretch:</strong> Lower until you feel a deep hamstring stretch (typically mid-shin level). This loaded stretch is what drives hamstring hypertrophy.",
+      sets: "3–4", reps: "8–12", rest: "2–3 min"
+    },
+    {
+      title: "Leg Press",
+      video: "IZxyjW7MPJQ",
+      desc: "The leg press allows very heavy quad and glute loading without the spinal compression of a squat. Excellent for adding volume after squats.",
+      primary: "Quadriceps, Glutes",
+      secondary: "Hamstrings",
+      difficulty: "Beginner",
+      type: "Compound",
+      muscles: ["Rectus Femoris", "Vastus Lateralis", "Vastus Medialis", "Gluteus Maximus"],
+      cues: ["Low foot = more quad", "High foot = more glute/ham", "Don't lock out fully", "Push through full foot", "Deep range of motion"],
+      tips: "<strong>Foot position changes everything:</strong> Low, narrow foot placement maximises quad. High, wide foot placement brings glutes and hamstrings in. Vary it for complete development.",
+      sets: "3–4", reps: "10–15", rest: "2–3 min"
+    },
+    {
+      title: "Leg Curl (Lying / Seated)",
+      video: "n9WFKM0HOBw",
+      desc: "The primary knee-flexion hamstring exercise. Seated leg curls are superior — the hip is flexed, putting the hamstring in a stretched position before the curl.",
+      primary: "Hamstrings (knee flexion)",
+      secondary: "Gastrocnemius",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Biceps Femoris", "Semitendinosus", "Semimembranosus", "Gastrocnemius"],
+      cues: ["Don't let hips rise off the pad", "Full range of motion", "Squeeze at peak contraction", "Slow descent — 3 seconds", "Seated > lying for stretch"],
+      tips: "<strong>Seated vs Lying:</strong> Seated leg curls (hip flexed) stretch the hamstring more, leading to greater muscle growth. If your gym has both, prioritise the seated version.",
+      sets: "3–4", reps: "10–15", rest: "1–1.5 min"
+    },
+    {
+      title: "Bulgarian Split Squat",
+      video: "2C-uNgKwPLE",
+      desc: "The most brutal single-leg exercise. The Bulgarian split squat hits the quads and glutes unilaterally, fixing imbalances and building serious leg mass.",
+      primary: "Quads, Glutes",
+      secondary: "Hamstrings, Hip Flexors",
+      difficulty: "Advanced",
+      type: "Compound",
+      muscles: ["Quadriceps", "Gluteus Maximus", "Hamstrings", "Hip Flexors"],
+      cues: ["Rear foot elevated on bench", "Keep front shin vertical", "Knee doesn't cave in", "Torso slightly forward for glutes", "Deep range of motion"],
+      tips: "<strong>Best split movement:</strong> Research consistently shows the Bulgarian split squat produces extremely high quad and glute activation. If you can only pick one unilateral exercise, this is it.",
+      sets: "3–4", reps: "8–10", rest: "2–3 min"
+    },
+    {
+      title: "Leg Extension",
+      video: "YyvSfVjQeL0",
+      desc: "The only true quad isolation exercise. Specifically trains the rectus femoris and vastus muscles without involving the hips — great for the final quad 'detail'.",
+      primary: "Quadriceps",
+      secondary: "None",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Rectus Femoris", "Vastus Lateralis", "Vastus Medialis", "Vastus Intermedius"],
+      cues: ["Squeeze hard at full extension", "Point toes slightly up", "Control the descent", "Don't use momentum", "Pause 1 second at top"],
+      tips: "<strong>Pair with squats:</strong> Use leg extensions after squats to finish off the quads. They also help develop the vastus medialis (inner quad teardrop) when done with feet turned out.",
+      sets: "3–4", reps: "12–15", rest: "1–1.5 min"
+    },
+    {
+      title: "Hip Thrust",
+      video: "xDmFkJxPzeM",
+      desc: "The most glute-specific barbell exercise. The hip thrust trains the gluteus maximus in its strongest range of motion — full hip extension.",
+      primary: "Gluteus Maximus",
+      secondary: "Hamstrings, Quads",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Gluteus Maximus", "Gluteus Medius", "Hamstrings"],
+      cues: ["Upper back on bench edge", "Bar over hip crease", "Drive hips up explosively", "Squeeze glutes at top", "Neutral spine — don't hyperextend back"],
+      tips: "<strong>Glute activation is real:</strong> EMG research consistently shows the hip thrust produces the highest gluteus maximus activation of any exercise — even more than squats and deadlifts.",
+      sets: "3–4", reps: "8–12", rest: "2–3 min"
+    },
+    {
+      title: "Calf Raises (Standing / Seated)",
+      video: "gwLzBJYoWlQ",
+      desc: "Calves are often neglected but respond to heavy, high-rep training. Standing trains the gastrocnemius; seated (with bent knee) isolates the soleus.",
+      primary: "Gastrocnemius / Soleus",
+      secondary: "Tibialis Posterior",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Gastrocnemius", "Soleus", "Tibialis Posterior"],
+      cues: ["Full range of motion — deep stretch at bottom", "Pause 2s at the top squeeze", "Don't bounce at the bottom", "Standing = gastro, Seated = soleus", "High reps (15–20+) work well"],
+      tips: "<strong>Calves need volume:</strong> Calves are slow-twitch dominant. They respond best to high rep ranges (15–25), heavy weight, full range of motion, and most importantly — actually training them consistently.",
+      sets: "4", reps: "15–20", rest: "1–1.5 min"
+    }
+  ],
+  bicep: [
+    {
+      title: "Barbell Curl",
+      video: "ykJmrZ5v0Oo",
+      desc: "The classic mass builder. Barbell curls allow heavier loading than dumbbells and are the foundational bicep exercise for overall thickness and peak.",
+      primary: "Biceps Brachii",
+      secondary: "Brachialis, Brachioradialis",
+      difficulty: "Beginner",
+      type: "Compound",
+      muscles: ["Biceps Brachii (long & short head)", "Brachialis", "Brachioradialis"],
+      cues: ["Keep elbows pinned to sides", "Full extension at the bottom", "Supinate wrist at the top", "Don't swing!", "Squeeze hard at peak"],
+      tips: "<strong>Cheat curls (advanced):</strong> A small amount of body English on the final rep is fine, but use it to get the weight UP, not to swing through the whole lift. Your biceps should still be doing the work.",
+      sets: "3–4", reps: "8–12", rest: "1.5–2 min"
+    },
+    {
+      title: "Incline Dumbbell Curl",
+      video: "sAq_ocpRh_I",
+      desc: "The incline position stretches the long head of the bicep at the start of the movement — producing a greater loaded stretch and superior long head development (the outer peak).",
+      primary: "Biceps Brachii (Long Head)",
+      secondary: "Brachialis",
+      difficulty: "Intermediate",
+      type: "Isolation",
+      muscles: ["Biceps Brachii (Long Head)", "Brachialis"],
+      cues: ["Bench at 45–60°", "Let arm hang fully at bottom", "Don't let elbow drift forward", "Supinate at the top", "Full stretch is the key"],
+      tips: "<strong>Best for the peak:</strong> The long head (outer) of the bicep creates the 'peak' when flexed. The incline curl stretches and works it maximally — a must-have in your program.",
+      sets: "3", reps: "10–15", rest: "1–1.5 min"
+    },
+    {
+      title: "Hammer Curl",
+      video: "zC3nLlEvin4",
+      desc: "The neutral grip shifts focus from the bicep to the brachialis — the muscle underneath the bicep that pushes it up and creates arm thickness from the side.",
+      primary: "Brachialis",
+      secondary: "Brachioradialis, Biceps Brachii",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Brachialis", "Brachioradialis", "Biceps Brachii"],
+      cues: ["Neutral grip (like a hammer)", "Keep elbow at side", "Don't rotate the wrist", "Full extension at bottom", "Slow and controlled"],
+      tips: "<strong>Thickness builder:</strong> The brachialis can't be seen directly, but it pushes the bicep up — so a big brachialis makes the whole arm look bigger from every angle. Don't skip hammer curls.",
+      sets: "3–4", reps: "10–15", rest: "1–1.5 min"
+    },
+    {
+      title: "Preacher Curl",
+      video: "fIWP-FRFNU0",
+      desc: "The preacher curl eliminates body english and forces pure bicep work. It's particularly effective for the short head (inner bicep) and the peak at the bottom of the movement.",
+      primary: "Biceps Brachii (Short Head)",
+      secondary: "Brachialis",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Biceps Brachii (Short Head)", "Brachialis"],
+      cues: ["Upper arm stays on pad", "Don't hyperextend at the bottom", "Full contraction at top", "EZ-bar reduces wrist strain", "Control the eccentric"],
+      tips: "<strong>Bicep peak at contraction:</strong> The preacher curl makes it nearly impossible to cheat. Great for beginners learning the movement or advanced lifters who want to go to failure safely.",
+      sets: "3", reps: "10–12", rest: "1–1.5 min"
+    },
+    {
+      title: "Cable Curl",
+      video: "NFzTWp2qpiE",
+      desc: "Cables provide constant tension throughout the movement — unlike free weights that get lighter at the top. Great for both long head and short head depending on cable height.",
+      primary: "Biceps Brachii",
+      secondary: "Brachialis",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Biceps Brachii", "Brachialis"],
+      cues: ["Cable at wrist height", "Keep elbow steady", "Squeeze at top — hold 1 sec", "Full extension at bottom", "Don't let cable pull arm back too far"],
+      tips: "<strong>Constant tension = growth:</strong> The advantage of cables is that the weight doesn't get 'easier' at any point. Use them at the end of your workout for maximum pump and finishing volume.",
+      sets: "3", reps: "12–15", rest: "1 min"
+    },
+    {
+      title: "Concentration Curl",
+      video: "0AUGkch3tzc",
+      desc: "A seated isolation movement where the elbow is braced against the inner thigh, removing all momentum. Excellent for developing the bicep peak.",
+      primary: "Biceps Brachii (Peak)",
+      secondary: "Brachialis",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Biceps Brachii", "Brachialis"],
+      cues: ["Elbow braced on inner thigh", "Supinate fully at top", "Full range of motion", "Squeeze hard at peak", "No swinging — pure isolation"],
+      tips: "<strong>Arnold's favourite:</strong> Arnold used concentration curls extensively for peak development. The key is the full supination (turning the wrist outward) at the top for maximum bicep squeeze.",
+      sets: "3", reps: "10–15", rest: "1 min"
+    }
+  ],
+  tricep: [
+    {
+      title: "Close-Grip Bench Press",
+      video: "nEF0bv2FW54",
+      desc: "The most effective mass-building exercise for triceps. The close-grip bench allows heavy loading while placing significant demand on all three tricep heads.",
+      primary: "Triceps (all 3 heads)",
+      secondary: "Anterior Deltoid, Pec Major",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Triceps Brachii (Lateral, Medial, Long Head)", "Anterior Deltoid", "Pectoralis Major"],
+      cues: ["Hands shoulder-width or just inside", "Don't go too narrow (wrist pain)", "Tuck elbows — don't flare", "Full lockout at top", "Touch lower chest"],
+      tips: "<strong>Heavy compound first:</strong> Always start tricep training with a heavy compound (this, dips, or overhead press). Isolation exercises alone won't build serious tricep mass.",
+      sets: "4", reps: "6–10", rest: "2–3 min"
+    },
+    {
+      title: "Overhead Tricep Extension",
+      video: "YbX7Wd8jQ-Q",
+      desc: "The long head of the tricep only fully stretches when the arm is overhead. This exercise is essential for long head development — the largest and most visible tricep head.",
+      primary: "Long Head of Tricep",
+      secondary: "Lateral & Medial Head",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Triceps Brachii (Long Head)", "Triceps Brachii (Lateral Head)"],
+      cues: ["Keep elbows pointing forward", "Don't let elbows flare wide", "Full stretch at bottom", "Squeeze fully at lockout", "Can be done seated or standing"],
+      tips: "<strong>Long head unlock:</strong> The long head crosses the shoulder joint, so it's only fully stretched with arms overhead. If you skip overhead extensions, you're leaving long head gains on the table.",
+      sets: "3–4", reps: "10–15", rest: "1.5 min"
+    },
+    {
+      title: "Tricep Pushdown (Cable)",
+      video: "2-LAMcpzODU",
+      desc: "The most common tricep exercise. Cable pushdowns isolate all three heads with constant tension. Use a rope for more range of motion at the bottom.",
+      primary: "Lateral & Medial Head",
+      secondary: "Long Head",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Triceps Brachii (Lateral Head)", "Triceps Brachii (Medial Head)", "Triceps Brachii (Long Head)"],
+      cues: ["Elbows fixed at sides", "Full lockout — don't stop early", "Flare wrists outward at bottom (rope)", "Control the return", "Keep upper body still"],
+      tips: "<strong>Rope vs bar:</strong> Rope pushdowns allow you to flare the wrists at the bottom, increasing range of motion and lateral head activation. The straight bar allows heavier loading for overall tricep strength.",
+      sets: "3–4", reps: "12–15", rest: "1–1.5 min"
+    },
+    {
+      title: "Skull Crushers (EZ Bar)",
+      video: "NIpgV3whMbo",
+      desc: "A classic isolation exercise that specifically targets all three tricep heads with a heavy load. Done lying on a bench, lowering the bar toward your forehead.",
+      primary: "All 3 Tricep Heads",
+      secondary: "Anconeus",
+      difficulty: "Intermediate",
+      type: "Isolation",
+      muscles: ["Triceps Brachii (all heads)", "Anconeus"],
+      cues: ["Bar slightly behind the head, not forehead", "Elbows point up and slightly forward", "Only the elbow joint moves", "Slow on the way down", "Full lockout at top"],
+      tips: "<strong>Behind the head variation:</strong> Lower the bar slightly behind your head (not to your forehead) for a greater stretch on the long head. Combine with a close-grip press in a 'Tate press' superset for maximum volume.",
+      sets: "3–4", reps: "8–12", rest: "1.5–2 min"
+    },
+    {
+      title: "Dips (Tricep Focused)",
+      video: "2z8JmcrW-As",
+      desc: "Weighted dips are the most powerful compound tricep exercise. By keeping the torso upright, dips emphasise the triceps over the chest.",
+      primary: "Triceps (all 3 heads)",
+      secondary: "Pec Major, Anterior Deltoid",
+      difficulty: "Intermediate",
+      type: "Compound",
+      muscles: ["Triceps Brachii", "Pectoralis Major", "Anterior Deltoid"],
+      cues: ["Keep torso upright (more tricep)", "Elbows track behind you", "Full lockout at top", "Don't let shoulders roll forward", "Full depth — upper arm parallel to floor"],
+      tips: "<strong>Upright = tricep:</strong> Leaning forward shifts load to chest. Stay upright to maximise tricep engagement. Add a weight belt once bodyweight becomes easy.",
+      sets: "3–4", reps: "8–12", rest: "2 min"
+    },
+    {
+      title: "Single-Arm Cable Kickback",
+      video: "l3WBhI93IfA",
+      desc: "The kickback extends the elbow while the arm is behind the torso — maximally loading the tricep at full extension (peak contraction). Best done with cables for constant tension.",
+      primary: "Lateral Head of Tricep",
+      secondary: "Medial Head",
+      difficulty: "Beginner",
+      type: "Isolation",
+      muscles: ["Triceps Brachii (Lateral Head)", "Triceps Brachii (Medial Head)"],
+      cues: ["Upper arm parallel to floor", "Only the elbow moves", "Squeeze hard at full extension", "Hold 1 second at lockout", "Cable > dumbbell for tension at peak"],
+      tips: "<strong>Hold the peak:</strong> The lateral head is most activated at full lockout. Pause for 1 second at full extension every rep for superior lateral head development.",
+      sets: "3", reps: "12–15", rest: "1 min"
+    }
+  ]
+};
+
+// ===================== RENDER =====================
+function renderExercises() {
+  Object.keys(data).forEach(group => {
+    const grid = document.getElementById('grid-' + group);
+    if (!grid) return;
+    data[group].forEach((ex, i) => {
+      const card = document.createElement('div');
+      card.className = 'exercise-card';
+      card.innerHTML = `
+        <div class="video-thumb">
+          <div class="play-overlay" onclick="openModal('${ex.video}', ${i}, '${group}')">
+            <div class="play-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+          </div>
+          <img src="https://img.youtube.com/vi/${ex.video}/mqdefault.jpg" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;" alt="${ex.title}" loading="lazy" />
+        </div>
+        <div class="card-body">
+          <div class="card-number">Exercise ${String(i+1).padStart(2,'0')}</div>
+          <div class="card-title">${ex.title}</div>
+          <div class="card-desc">${ex.desc.substring(0, 100)}...</div>
+          <div class="card-tags">
+            <span class="tag tag-primary">${ex.type}</span>
+            <span class="tag tag-secondary">${ex.difficulty}</span>
+          </div>
+          <div class="card-muscles"><strong>Primary:</strong> ${ex.primary}</div>
+          <div class="prescription-strip">
+            <div class="presc-item"><span class="presc-val">${ex.sets}</span><span class="presc-label">Sets</span></div>
+            <div class="presc-divider"></div>
+            <div class="presc-item"><span class="presc-val">${ex.reps}</span><span class="presc-label">Reps</span></div>
+            <div class="presc-divider"></div>
+            <div class="presc-item"><span class="presc-val">${ex.rest}</span><span class="presc-label">Rest</span></div>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  });
+}
+
+// ===================== TABS =====================
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.muscle-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ===================== MODAL =====================
+let currentGroup = null;
+let currentIndex = null;
+
+function openModal(videoId, index, group) {
+  currentGroup = group;
+  currentIndex = index;
+  const ex = data[group][index];
+
+  document.getElementById('modal-iframe').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+  document.getElementById('modal-title').textContent = ex.title;
+  document.getElementById('modal-desc').textContent = ex.desc;
+  document.getElementById('modal-tips').innerHTML = ex.tips;
+
+  const tagsEl = document.getElementById('modal-tags');
+  tagsEl.innerHTML = `<span class="tag tag-primary">${ex.type}</span><span class="tag tag-secondary">${ex.difficulty}</span>`;
+
+  const musclesEl = document.getElementById('modal-muscles');
+  musclesEl.innerHTML = ex.muscles.map(m => `<li>${m}</li>`).join('');
+
+  const cuesEl = document.getElementById('modal-cues');
+  cuesEl.innerHTML = ex.cues.map(c => `<li>${c}</li>`).join('');
+
+  // Prescription banner in modal
+  document.getElementById('modal-prescription').innerHTML = `
+    <div class="modal-presc-box">
+      <div class="modal-presc-item">
+        <div class="modal-presc-val">${ex.sets}</div>
+        <div class="modal-presc-label">Sets</div>
+      </div>
+      <div class="modal-presc-sep">×</div>
+      <div class="modal-presc-item">
+        <div class="modal-presc-val">${ex.reps}</div>
+        <div class="modal-presc-label">Reps</div>
+      </div>
+      <div class="modal-presc-sep">|</div>
+      <div class="modal-presc-item">
+        <div class="modal-presc-val">${ex.rest}</div>
+        <div class="modal-presc-label">Rest Between Sets</div>
+      </div>
+    </div>
+    <div class="modal-presc-note">📚 Based on NASM &amp; Schoenfeld hypertrophy research — optimal for average lifter aiming for muscle growth</div>
+  `;
+
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal')) return;
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('modal-iframe').src = '';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// INIT
+renderExercises();
+
+// ===================== TOAST SYSTEM =====================
+function showToast(msg, type = 'default', duration = 2800) {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  const icons = { success: '✅', error: '❌', default: '💡' };
+  t.innerHTML = `<span>${icons[type] || '💡'}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 220); }, duration);
+}
+
+// ===================== PAGE SWITCHING (UPDATED) =====================
+function showPage(page) {
+  ['guide','bmi','calories'].forEach(p => {
+    const el = document.getElementById('page-' + p);
+    if (el) el.style.display = p === page ? 'block' : 'none';
+  });
+  // Desktop nav
+  ['nav-guide','nav-bmi','nav-calories'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.classList.toggle('active', id === 'nav-' + page);
+  });
+  // Mobile nav
+  ['mob-nav-guide','mob-nav-bmi','mob-nav-calories'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.classList.toggle('active', id === 'mob-nav-' + page);
+  });
+  if (page === 'calories') refreshCalorieUI();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===================== SCROLL TO TOP =====================
+const scrollTopBtn = document.getElementById('scroll-top');
+window.addEventListener('scroll', () => {
+  scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+}, { passive: true });
+
+// ===================== MOBILE NAV BODY PADDING =====================
+(function() {
+  if (window.innerWidth < 768) document.body.classList.add('has-mobile-nav');
+  window.addEventListener('resize', () => {
+    document.body.classList.toggle('has-mobile-nav', window.innerWidth < 768);
+  });
+})();
+
+// ===================== AUTH SYSTEM =====================
+let authMode = 'login';
+let currentUser = null;
+
+function getUsers() {
+  try { return JSON.parse(localStorage.getItem('ironform_users') || '{}'); } catch { return {}; }
+}
+function saveUsers(u) { localStorage.setItem('ironform_users', JSON.stringify(u)); }
+
+function openAuthModal(mode) {
+  authMode = mode;
+  document.getElementById('auth-modal').style.display = 'flex';
+  document.getElementById('auth-error').style.display = 'none';
+  document.getElementById('auth-name').value = '';
+  document.getElementById('auth-email').value = '';
+  document.getElementById('auth-password').value = '';
+  document.getElementById('auth-confirm').value = '';
+  updateAuthModalUI();
+}
+
+function updateAuthModalUI() {
+  const isLogin = authMode === 'login';
+  document.getElementById('auth-modal-title').textContent = isLogin ? 'Welcome Back' : 'Create Account';
+  document.getElementById('auth-modal-sub').textContent = isLogin ? 'Log in to access your calorie tracker and saved data.' : 'Join IRONFORM and start tracking your nutrition.';
+  document.getElementById('auth-submit-btn').textContent = isLogin ? 'LOGIN' : 'CREATE ACCOUNT';
+  document.getElementById('auth-name-field').style.display = isLogin ? 'none' : 'block';
+  document.getElementById('auth-confirm-field').style.display = isLogin ? 'none' : 'block';
+  document.getElementById('auth-switch-text').textContent = isLogin ? "Don't have an account?" : 'Already have an account?';
+  document.getElementById('auth-switch-btn').textContent = isLogin ? 'Sign Up' : 'Login';
+}
+
+function switchAuthMode() {
+  authMode = authMode === 'login' ? 'signup' : 'login';
+  document.getElementById('auth-error').style.display = 'none';
+  updateAuthModalUI();
+}
+
+function closeAuthModal() {
+  document.getElementById('auth-modal').style.display = 'none';
+  // Reset all password fields back to hidden when modal closes
+  ['auth-password', 'auth-confirm'].forEach(id => {
+    const inp = document.getElementById(id);
+    if (inp) {
+      inp.type = 'password';
+      const btn = inp.closest('.pw-wrap')?.querySelector('.pw-toggle');
+      if (btn) setEyeState(btn, false);
+    }
+  });
+}
+
+function togglePw(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  const showing = inp.type === 'text';
+  inp.type = showing ? 'password' : 'text';
+  setEyeState(btn, !showing);
+  inp.focus();
+}
+
+function setEyeState(btn, isVisible) {
+  btn.querySelector('.eye-open').style.display  = isVisible ? 'none'  : '';
+  btn.querySelector('.eye-closed').style.display = isVisible ? ''      : 'none';
+  btn.setAttribute('aria-label', isVisible ? 'Hide password' : 'Show password');
+}
+
+function submitAuth() {
+  const email = document.getElementById('auth-email').value.trim().toLowerCase();
+  const password = document.getElementById('auth-password').value;
+  const errEl = document.getElementById('auth-error');
+
+  const showErr = (msg) => { errEl.textContent = msg; errEl.style.display = 'block'; };
+
+  if (!email || !password) return showErr('Please fill in all fields.');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showErr('Please enter a valid email address.');
+  if (password.length < 6) return showErr('Password must be at least 6 characters.');
+
+  const users = getUsers();
+
+  if (authMode === 'signup') {
+    const name = document.getElementById('auth-name').value.trim();
+    const confirm = document.getElementById('auth-confirm').value;
+    if (!name) return showErr('Please enter your name.');
+    if (password !== confirm) return showErr('Passwords do not match.');
+    if (users[email]) return showErr('An account with this email already exists.');
+    // welcomeEmailSent: false — will be flipped to true after first-ever email dispatch
+    const newUser = { name, email, password, createdAt: Date.now(), welcomeEmailSent: false, data: {} };
+    users[email] = newUser;
+    saveUsers(users);
+    loginUser(newUser, true); // true = brand-new account
+  } else {
+    if (!users[email]) return showErr('No account found with this email.');
+    if (users[email].password !== password) return showErr('Incorrect password.');
+    loginUser(users[email], false);
+  }
+}
+
+function loginUser(user, isNewUser = false) {
+  currentUser = user;
+  localStorage.setItem('ironform_session', user.email);
+  closeAuthModal();
+  updateAuthUI();
+  refreshCalorieUI();
+
+  // Only send welcome email if:
+  // 1. This is a brand-new signup AND
+  // 2. The welcome email has never been sent for this account (persistent guard)
+  if (isNewUser && user.welcomeEmailSent === false) {
+    showToast(`Account created! Welcome to IRONFORM, ${user.name.split(' ')[0]}! 🏋️`, 'success', 3500);
+    sendWelcomeEmail(user);
+  } else {
+    showToast(`Welcome back, ${user.name.split(' ')[0]}! 💪`, 'success');
+  }
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('ironform_session');
+  updateAuthUI();
+  refreshCalorieUI();
+}
+
+function updateAuthUI() {
+  const loggedIn = !!currentUser;
+  document.getElementById('auth-guest').style.display = loggedIn ? 'none' : 'flex';
+  document.getElementById('auth-user').style.display = loggedIn ? 'flex' : 'none';
+  if (loggedIn) document.getElementById('auth-username').textContent = '👤 ' + currentUser.name.split(' ')[0];
+}
+
+function restoreSession() {
+  const saved = localStorage.getItem('ironform_session');
+  if (saved) {
+    const users = getUsers();
+    if (users[saved]) loginUser(users[saved]);
+  }
+}
+
+// ===================== CALORIE TRACKER =====================
+let pendingFood = null;
+let calGoal = 2000;
+const MEALS = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
+
+function getTodayKey() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function getUserData() {
+  if (!currentUser) return null;
+  const users = getUsers();
+  return users[currentUser.email]?.data || {};
+}
+
+function saveUserData(data) {
+  if (!currentUser) return;
+  const users = getUsers();
+  if (!users[currentUser.email]) return;
+  users[currentUser.email].data = data;
+  saveUsers(users);
+  currentUser.data = data;
+}
+
+function getTodayLog() {
+  const d = getUserData();
+  if (!d) return { entries: [], goal: calGoal };
+  const today = getTodayKey();
+  if (!d[today]) d[today] = { entries: [], goal: calGoal };
+  return d[today];
+}
+
+function saveTodayLog(log) {
+  const d = getUserData() || {};
+  d[getTodayKey()] = log;
+  saveUserData(d);
+}
+
+function refreshCalorieUI() {
+  const loggedIn = !!currentUser;
+  document.getElementById('cal-locked').style.display = loggedIn ? 'none' : 'block';
+  document.getElementById('cal-active').style.display = loggedIn ? 'block' : 'none';
+  if (!loggedIn) return;
+
+  // Date
+  const now = new Date();
+  document.getElementById('cal-date').textContent = now.toLocaleDateString('en-US', { weekday:'long', month:'short', day:'numeric' });
+
+  // Load today
+  const log = getTodayLog();
+  calGoal = log.goal || 2000;
+  document.getElementById('cal-goal-input').value = calGoal;
+
+  renderLog(log);
+  updateStats(log);
+}
+
+function updateGoal(val) {
+  calGoal = parseInt(val) || 2000;
+  const log = getTodayLog();
+  log.goal = calGoal;
+  saveTodayLog(log);
+  updateStats(log);
+}
+
+function updateStats(log) {
+  const entries = log.entries || [];
+  const totalCal = entries.reduce((s, e) => s + e.calories, 0);
+  const totalP = entries.reduce((s, e) => s + (e.protein || 0), 0);
+  const totalC = entries.reduce((s, e) => s + (e.carbs || 0), 0);
+  const totalF = entries.reduce((s, e) => s + (e.fat || 0), 0);
+  const goal = log.goal || calGoal;
+  const remaining = Math.max(0, goal - totalCal);
+  const pct = Math.min(100, Math.round((totalCal / goal) * 100));
+
+  document.getElementById('stat-consumed').textContent = totalCal.toLocaleString();
+  document.getElementById('stat-remaining').textContent = remaining.toLocaleString();
+  document.getElementById('stat-entries').textContent = entries.length;
+
+  // Ring
+  const circumference = 289.1;
+  const offset = circumference - (pct / 100) * circumference;
+  const ring = document.getElementById('cal-ring');
+  ring.style.strokeDashoffset = offset;
+  ring.style.stroke = pct >= 100 ? '#ef5350' : pct >= 80 ? '#ffa726' : 'var(--accent)';
+  document.getElementById('ring-pct').textContent = pct + '%';
+  document.getElementById('ring-pct').style.color = pct >= 100 ? '#ef5350' : pct >= 80 ? '#ffa726' : 'var(--accent)';
+
+  // Macros
+  const totalMacroG = totalP + totalC + totalF;
+  if (totalMacroG > 0) {
+    document.getElementById('macro-section').style.display = 'block';
+    document.getElementById('bar-protein').style.width = ((totalP / totalMacroG) * 100) + '%';
+    document.getElementById('bar-carbs').style.width = ((totalC / totalMacroG) * 100) + '%';
+    document.getElementById('bar-fat').style.width = ((totalF / totalMacroG) * 100) + '%';
+    document.getElementById('total-protein').textContent = Math.round(totalP) + 'g';
+    document.getElementById('total-carbs').textContent = Math.round(totalC) + 'g';
+    document.getElementById('total-fat').textContent = Math.round(totalF) + 'g';
+  } else {
+    document.getElementById('macro-section').style.display = 'none';
+  }
+}
+
+function renderLog(log) {
+  const entries = log.entries || [];
+  const container = document.getElementById('meal-sections');
+  const emptyEl = document.getElementById('log-empty');
+  container.innerHTML = '';
+
+  if (entries.length === 0) { emptyEl.style.display = 'block'; return; }
+  emptyEl.style.display = 'none';
+
+  MEALS.forEach(meal => {
+    const mealEntries = entries.filter(e => e.meal === meal);
+    if (mealEntries.length === 0) return;
+    const mealTotal = mealEntries.reduce((s, e) => s + e.calories, 0);
+    const header = document.createElement('div');
+    header.className = 'meal-group-header';
+    header.innerHTML = `${meal} <span style="float:right;color:var(--accent);font-family:'Bebas Neue',sans-serif;font-size:1rem;">${mealTotal} kcal</span>`;
+    container.appendChild(header);
+    mealEntries.forEach(entry => {
+      const row = document.createElement('div');
+      row.className = 'food-log-row';
+      row.innerHTML = `
+        <div class="food-log-name">${entry.name}</div>
+        <div class="food-log-macros">P:${Math.round(entry.protein||0)}g · C:${Math.round(entry.carbs||0)}g · F:${Math.round(entry.fat||0)}g</div>
+        <div class="food-log-cal">${entry.calories}</div>
+        <button class="food-log-del" onclick="deleteEntry('${entry.id}')" title="Remove">✕</button>
+      `;
+      container.appendChild(row);
+    });
+  });
+}
+
+function deleteEntry(id) {
+  const log = getTodayLog();
+  log.entries = log.entries.filter(e => e.id !== id);
+  saveTodayLog(log);
+  renderLog(log);
+  updateStats(log);
+}
+
+function clearToday() {
+  if (!confirm('Clear all food entries for today?')) return;
+  const log = getTodayLog();
+  log.entries = [];
+  saveTodayLog(log);
+  renderLog(log);
+  updateStats(log);
+  document.getElementById('food-result-preview').style.display = 'none';
+  pendingFood = null;
+}
+
+// ===== AI FOOD SEARCH =====
+async function searchFood() {
+  const query = document.getElementById('food-search-input').value.trim();
+  if (!query) return;
+
+  const spinner = document.getElementById('food-search-spinner');
+  const btn = document.getElementById('food-search-btn');
+  const errEl = document.getElementById('food-error');
+  const preview = document.getElementById('food-result-preview');
+
+  spinner.style.display = 'block';
+  btn.disabled = true;
+  btn.style.opacity = '0.5';
+  errEl.style.display = 'none';
+  preview.style.display = 'none';
+  pendingFood = null;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 400,
+        system: `You are a nutrition database. When given a food item or meal description, return ONLY a valid JSON object with these fields: name (string, descriptive), calories (integer, per the described amount), protein (number, grams), carbs (number, grams), fat (number, grams), detail (string, 1 sentence about the serving size and nutrition notes). Use standard nutritional values. Be accurate. Return ONLY the JSON object, no markdown, no explanation.`,
+        messages: [{ role: 'user', content: `Food: ${query}` }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+    const food = JSON.parse(clean);
+
+    pendingFood = { ...food, meal: document.getElementById('meal-type').value, id: Date.now().toString() };
+
+    document.getElementById('fr-name').textContent = food.name;
+    document.getElementById('fr-detail').textContent = food.detail || '';
+    document.getElementById('fr-calories').textContent = food.calories;
+    document.getElementById('fr-protein').textContent = Math.round(food.protein || 0);
+    document.getElementById('fr-carbs').textContent = Math.round(food.carbs || 0);
+    document.getElementById('fr-fat').textContent = Math.round(food.fat || 0);
+    preview.style.display = 'block';
+
+  } catch (e) {
+    errEl.textContent = 'Could not retrieve nutrition data. Please try again or be more specific (e.g. "100g grilled chicken breast").';
+    errEl.style.display = 'block';
+  }
+
+  spinner.style.display = 'none';
+  btn.disabled = false;
+  btn.style.opacity = '1';
+}
+
+function addFoodToLog() {
+  if (!pendingFood) return;
+  pendingFood.meal = document.getElementById('meal-type').value;
+
+  const log = getTodayLog();
+  log.entries.push(pendingFood);
+  saveTodayLog(log);
+  renderLog(log);
+  updateStats(log);
+
+  showToast(`${pendingFood.name} added — ${pendingFood.calories} kcal 🔥`, 'success');
+
+  document.getElementById('food-result-preview').style.display = 'none';
+  document.getElementById('food-search-input').value = '';
+  document.getElementById('food-search-input').focus();
+  pendingFood = null;
+}
+
+// ===== HISTORY =====
+function showHistory() {
+  const panel = document.getElementById('history-panel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  if (panel.style.display === 'none') return;
+
+  const data = getUserData() || {};
+  const today = getTodayKey();
+  const list = document.getElementById('history-list');
+  list.innerHTML = '';
+
+  // last 7 days
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    days.push(d.toISOString().split('T')[0]);
+  }
+
+  let hasData = false;
+  days.forEach(dateKey => {
+    const dayData = data[dateKey];
+    if (!dayData || !dayData.entries?.length) return;
+    hasData = true;
+    const total = dayData.entries.reduce((s, e) => s + e.calories, 0);
+    const goal = dayData.goal || 2000;
+    const pct = Math.min(100, (total / goal) * 100);
+    const label = dateKey === today ? 'Today' : new Date(dateKey + 'T12:00:00').toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+    const div = document.createElement('div');
+    div.className = 'history-day';
+    div.innerHTML = `
+      <div class="history-day-date">${label}</div>
+      <div class="history-day-bar"><div class="history-day-fill" style="width:${pct}%;background:${pct>=100?'#ef5350':pct>=80?'#ffa726':'var(--accent)'}"></div></div>
+      <div class="history-day-cal">${total.toLocaleString()} / ${goal.toLocaleString()} kcal</div>
+    `;
+    list.appendChild(div);
+  });
+
+  if (!hasData) list.innerHTML = '<div style="text-align:center;color:var(--muted);padding:2rem;font-size:0.9rem;">No history yet — start logging food today!</div>';
+}
+
+// ===================== AI WELCOME EMAIL AGENT =====================
+async function sendWelcomeEmail(user) {
+  // ── GUARD: stamp the flag immediately so this can never fire twice ──
+  const users = getUsers();
+  if (!users[user.email] || users[user.email].welcomeEmailSent === true) {
+    console.log('[IRONFORM] Welcome email already sent for', user.email, '— skipping.');
+    return;
+  }
+  users[user.email].welcomeEmailSent = true;
+  saveUsers(users);
+  if (currentUser && currentUser.email === user.email) {
+    currentUser.welcomeEmailSent = true; // keep in-memory copy in sync
+  }
+  // ────────────────────────────────────────────────────────────────────
+
+  showEmailStatus('sending');
+
+  try {
+    const firstName = user.name.split(' ')[0];
+    const joinDate = new Date(user.createdAt).toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1024,
+        system: `You are the IRONFORM welcome email agent. Your job is to:
+1. Compose a warm, energetic, gym-enthusiast welcome email for a new IRONFORM member
+2. Send it to the user using the Gmail send tool
+
+The email should:
+- Have an exciting subject line (e.g. "Welcome to IRONFORM, [Name]! Your Training Journey Starts Now 🏋️")
+- Be personalized with their first name and join date
+- Be enthusiastic and motivational but not over-the-top
+- Briefly mention the 3 key features: Training Guide (45+ exercises with videos), BMI Calculator, and Calorie Tracker
+- Include a motivational closing line about their fitness journey
+- Be formatted in clean HTML with inline styles (dark background #0a0a0a, accent color #e8ff00, clean sans-serif font)
+- Sign off as "The IRONFORM Team"
+- Keep it concise — around 200-250 words in the body
+
+IMPORTANT: Actually send the email using the Gmail send tool. Do not just write it — use the tool to dispatch it.`,
+        messages: [{
+          role: 'user',
+          content: `Send a welcome email to this new IRONFORM member:
+Name: ${user.name}
+First Name: ${firstName}
+Email: ${user.email}
+Join Date: ${joinDate}
+
+Use the Gmail tool to send the email now.`
+        }],
+        mcp_servers: [{
+          type: 'url',
+          url: 'https://gmail.mcp.claude.com/mcp',
+          name: 'gmail'
+        }]
+      })
+    });
+
+    const data = await response.json();
+
+    // Check if the agent used a tool (sent the email)
+    const usedGmailTool = data.content?.some(
+      block => block.type === 'mcp_tool_use' && block.name?.toLowerCase().includes('send')
+    );
+    const hasTextResponse = data.content?.some(block => block.type === 'text');
+
+    if (usedGmailTool || hasTextResponse) {
+      showEmailStatus('sent');
+      showToast('📧 Welcome email sent to ' + user.email, 'success', 4000);
+    } else {
+      throw new Error('Agent did not confirm email dispatch');
+    }
+
+  } catch (err) {
+    console.warn('Welcome email failed:', err);
+    showEmailStatus('failed');
+    // Fail silently — don't disrupt the signup flow
+  }
+}
+
+function showEmailStatus(state) {
+  // Remove any existing status banner
+  const existing = document.getElementById('email-status-banner');
+  if (existing) existing.remove();
+
+  if (state === 'idle') return;
+
+  const configs = {
+    sending: {
+      icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation:spin-full 1s linear infinite;flex-shrink:0;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>`,
+      text: 'Sending your welcome email…',
+      color: 'var(--accent)',
+      bg: 'rgba(232,255,0,0.06)',
+      border: 'rgba(232,255,0,0.2)'
+    },
+    sent: {
+      icon: '✅',
+      text: 'Welcome email delivered to your inbox!',
+      color: '#66bb6a',
+      bg: 'rgba(102,187,106,0.08)',
+      border: 'rgba(102,187,106,0.25)'
+    },
+    failed: {
+      icon: '⚠️',
+      text: 'Could not send welcome email (Gmail not connected)',
+      color: 'var(--accent2)',
+      bg: 'rgba(255,60,0,0.06)',
+      border: 'rgba(255,60,0,0.2)'
+    }
+  };
+
+  const c = configs[state];
+  const banner = document.createElement('div');
+  banner.id = 'email-status-banner';
+  banner.style.cssText = `
+    position:fixed; bottom:calc(var(--mobile-nav-h, 0px) + 80px); left:50%; transform:translateX(-50%);
+    background:${c.bg}; border:1px solid ${c.border}; color:${c.color};
+    font-family:'Barlow Condensed',sans-serif; font-size:0.82rem; letter-spacing:1px;
+    padding:10px 18px; border-radius:99px; display:flex; align-items:center; gap:8px;
+    z-index:9998; white-space:nowrap; box-shadow:0 4px 20px rgba(0,0,0,0.3);
+    animation:toastIn 0.3s ease; max-width:90vw;
+  `;
+  banner.innerHTML = `<span>${c.icon}</span><span>${c.text}</span>`;
+  document.body.appendChild(banner);
+
+  // Auto-remove after delay
+  const delay = state === 'sending' ? 30000 : 5000;
+  setTimeout(() => {
+    if (banner.parentNode) {
+      banner.style.animation = 'toastOut 0.3s ease forwards';
+      setTimeout(() => banner.remove(), 300);
+    }
+  }, delay);
+}
+
+// ===================== INIT =====================
+restoreSession();
+
+
+// ===================== BMI CALCULATOR =====================
+let currentUnit = 'metric';
+let currentSex = 'male';
+
+function setUnit(unit) {
+  currentUnit = unit;
+  document.getElementById('unit-metric').style.background = unit === 'metric' ? 'var(--accent)' : 'none';
+  document.getElementById('unit-metric').style.color = unit === 'metric' ? '#000' : 'var(--muted)';
+  document.getElementById('unit-imperial').style.background = unit === 'imperial' ? 'var(--accent)' : 'none';
+  document.getElementById('unit-imperial').style.color = unit === 'imperial' ? '#000' : 'var(--muted)';
+  document.getElementById('height-metric').style.display = unit === 'metric' ? 'flex' : 'none';
+  document.getElementById('height-imperial').style.display = unit === 'imperial' ? 'flex' : 'none';
+  document.getElementById('weight-label').innerHTML = unit === 'metric'
+    ? 'Weight <span style="color:var(--muted);font-weight:400;">(kg)</span>'
+    : 'Weight <span style="color:var(--muted);font-weight:400;">(lbs)</span>';
+  calculateBMI();
+}
+
+function setSex(sex) {
+  currentSex = sex;
+  document.getElementById('sex-male').classList.toggle('active', sex === 'male');
+  document.getElementById('sex-female').classList.toggle('active', sex === 'female');
+  calculateBMI();
+}
+
+function calculateBMI() {
+  const age = parseFloat(document.getElementById('bmi-age').value);
+  const weight_raw = parseFloat(document.getElementById('bmi-weight').value);
+  const activity = parseFloat(document.getElementById('bmi-activity').value);
+
+  let weightKg, heightM;
+
+  if (currentUnit === 'metric') {
+    const heightCm = parseFloat(document.getElementById('bmi-height-cm').value);
+    if (!heightCm || !weight_raw || !age) return;
+    weightKg = weight_raw;
+    heightM = heightCm / 100;
+  } else {
+    const ft = parseFloat(document.getElementById('bmi-height-ft').value) || 0;
+    const inch = parseFloat(document.getElementById('bmi-height-in').value) || 0;
+    const totalInches = ft * 12 + inch;
+    if (!totalInches || !weight_raw || !age) return;
+    weightKg = weight_raw * 0.453592;
+    heightM = totalInches * 0.0254;
+  }
+
+  if (heightM < 0.5 || weightKg < 20) return;
+
+  // BMI
+  const bmi = weightKg / (heightM * heightM);
+
+  // BMR — Mifflin-St Jeor equation (most accurate)
+  let bmr;
+  if (currentSex === 'male') {
+    bmr = 10 * weightKg + 6.25 * (heightM * 100) - 5 * age + 5;
+  } else {
+    bmr = 10 * weightKg + 6.25 * (heightM * 100) - 5 * age - 161;
+  }
+
+  const tdee = Math.round(bmr * activity);
+
+  // Healthy weight range for BMI 18.5–24.9
+  const minKg = 18.5 * heightM * heightM;
+  const maxKg = 24.9 * heightM * heightM;
+  let rangeStr;
+  if (currentUnit === 'metric') {
+    rangeStr = `${minKg.toFixed(1)}–${maxKg.toFixed(1)} kg`;
+  } else {
+    rangeStr = `${(minKg * 2.20462).toFixed(1)}–${(maxKg * 2.20462).toFixed(1)} lbs`;
+  }
+
+  // Body fat estimate (Deurenberg formula)
+  const bfPct = (1.20 * bmi) + (0.23 * age) - (currentSex === 'male' ? 16.2 : 5.4);
+
+  // Category
+  let category, catColor, catDesc, recommendation;
+  if (bmi < 16) {
+    category = 'Severely Underweight'; catColor = '#4fc3f7';
+    catDesc = 'Your BMI indicates severe underweight. Focus on increasing caloric intake and building muscle mass.';
+    recommendation = `<strong style="color:var(--accent);">📋 Training Recommendation:</strong><br><br>Focus on <strong>strength training 3–4x/week</strong> with compound lifts (squat, deadlift, bench, row). Eat in a <strong>significant caloric surplus</strong> (500–700 kcal above maintenance). Prioritise sleep and recovery. Avoid excessive cardio until weight improves.`;
+  } else if (bmi < 18.5) {
+    category = 'Underweight'; catColor = '#4fc3f7';
+    catDesc = 'You are below the healthy weight range. Focus on a caloric surplus and muscle-building training.';
+    recommendation = `<strong style="color:var(--accent);">📋 Training Recommendation:</strong><br><br>Follow a <strong>3–4 day Push/Pull/Legs or full-body split</strong>. Eat at <strong>+300–500 kcal/day</strong> above your TDEE. Focus on progressive overload in compound lifts. Limit cardio to 1–2 sessions/week.`;
+  } else if (bmi < 25) {
+    category = 'Healthy Weight'; catColor = '#66bb6a';
+    catDesc = 'You are in the healthy BMI range. Focus on body composition — building muscle while maintaining or slightly adjusting weight.';
+    recommendation = `<strong style="color:var(--accent);">📋 Training Recommendation:</strong><br><br>You are in the optimal zone! Follow a <strong>4–5 day training split</strong> (Push/Pull/Legs or Upper/Lower). Eat at or near TDEE. Focus on <strong>progressive overload</strong> and body recomposition — building muscle while staying lean. Great time to optimise strength gains.`;
+  } else if (bmi < 30) {
+    category = 'Overweight'; catColor = '#ffa726';
+    catDesc = 'You are slightly above the healthy BMI range. A moderate caloric deficit combined with resistance training is most effective.';
+    recommendation = `<strong style="color:var(--accent);">📋 Training Recommendation:</strong><br><br>Aim for a <strong>moderate deficit of 300–500 kcal/day</strong> below TDEE. Resistance training is critical — it preserves muscle during fat loss. Follow a <strong>3–4 day full-body or PPL split</strong>. Add 2–3 cardio sessions/week (Zone 2 preferred). Prioritise protein at <strong>1.6–2.2g per kg bodyweight</strong>.`;
+  } else if (bmi < 35) {
+    category = 'Obese Class I'; catColor = '#ef5350';
+    catDesc = 'Class I obesity. Structured resistance training and a sustained caloric deficit will have dramatic results.';
+    recommendation = `<strong style="color:var(--accent);">📋 Training Recommendation:</strong><br><br>Start with <strong>3 days/week full-body resistance training</strong>. Eat at a <strong>500 kcal deficit</strong> (don't go lower — preserve muscle). Walk 8,000–10,000 steps daily. Add low-impact cardio (cycling, swimming). Consult a physician before starting any intense program.`;
+  } else {
+    category = 'Obese Class II+'; catColor = '#ef5350';
+    catDesc = 'BMI indicates high obesity. Medical guidance recommended alongside structured exercise and nutrition.';
+    recommendation = `<strong style="color:var(--accent);">📋 Training Recommendation:</strong><br><br>Seek guidance from a physician or registered dietitian. Begin with <strong>low-impact exercise</strong> (walking, swimming, seated resistance training). Aim for consistency over intensity — sustainable habits are the key. Do not extreme restrict calories.`;
+  }
+
+  // Update UI
+  document.getElementById('bmi-result').style.display = 'block';
+  document.getElementById('bmi-number').textContent = bmi.toFixed(1);
+  document.getElementById('bmi-number').style.color = catColor;
+  document.getElementById('bmi-category').textContent = category;
+  document.getElementById('bmi-category').style.color = catColor;
+  document.getElementById('bmi-category-desc').textContent = catDesc;
+  document.getElementById('stat-range').textContent = rangeStr;
+  document.getElementById('stat-bf').textContent = bfPct.toFixed(1) + '%';
+  document.getElementById('stat-tdee').textContent = tdee.toLocaleString() + ' kcal';
+  document.getElementById('stat-bmr').textContent = Math.round(bmr).toLocaleString() + ' kcal';
+  document.getElementById('cal-cut').textContent = Math.max(1200, tdee - 500).toLocaleString();
+  document.getElementById('cal-maintain').textContent = tdee.toLocaleString();
+  document.getElementById('cal-bulk').textContent = (tdee + 300).toLocaleString();
+  document.getElementById('bmi-recommendation').innerHTML = recommendation;
+
+  // Marker position on scale (BMI 16 → 0%, 40 → 100%)
+  const pct = Math.min(100, Math.max(0, ((bmi - 16) / (40 - 16)) * 100));
+  document.getElementById('bmi-marker').style.left = pct + '%';
+}
+</script>
+</body>
+</html>
